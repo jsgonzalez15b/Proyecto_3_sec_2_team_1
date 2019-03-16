@@ -55,7 +55,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				view.printMensage("Ingrese el número del cuatrimestre que desea cargar");
+				view.printMensage("Ingrese el número del semestre que desea cargar");
 				int num=sc.nextInt();
 				this.loadMovingViolations(num);
 				System.out.println("Hay "+movingViolationsQueue.size()+" elementos en cola y "+""+movingViolationsStack.size()+" en pila");
@@ -140,10 +140,16 @@ public class Controller {
 	}
 
 
-
-	public void loadMovingViolations(int num) {
+	/**
+	 * Metodo para carga de archivos segun semestre de seleccion
+	 * @param num Semestre a cargar datos (1 para primer semestre, cualquier otro numero para segundo semestre)
+	 */
+	public void loadMovingViolations(int num)
+	{
+		//estructuras de almacenamiento de infracciones
 		movingViolationsQueue=new Queue<VOMovingViolations>();
 		movingViolationsStack= new Stack<VOMovingViolations>();
+		//creacion e inicializacion de arreglo con nombre de los archivos de infracciones por mes 
 		String[] nombresArchivos=new String[12];
 		nombresArchivos[0]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_January_2018_ordered.csv";
 		nombresArchivos[1]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_February_2018_ordered.csv";
@@ -157,40 +163,54 @@ public class Controller {
 		nombresArchivos[9]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_October_2018.csv";
 		nombresArchivos[10]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_November_2018.csv";
 		nombresArchivos[11]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_December_2018.csv";
+		
 		CSVReader reader=null;
 		int inicio=-1; 
-		if(num==1){
-			inicio=0; 
-		}else if(num==2){
-			inicio=4;
-		}else{
-			inicio=8; 
+		if(num==1)
+		{
+			inicio=0; //lectura de archivos a partir del primer mes.
 		}
-		for(int i=inicio; i<inicio+4;i++){		try{
-			reader=new CSVReader(new FileReader(nombresArchivos[i]));
-			String[] linea=reader.readNext();
-			linea=reader.readNext();
-			while(linea!=null){
-				int tres=linea[3].equals("")?0:Integer.parseInt(linea[3]);
-				double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
-				double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
-				movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once));
-				movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once));
-
-
+		else
+		{
+			inicio=6; //lectura de archivos a partir del septimo mes.
+		}
+		for(int i=inicio; i<inicio+6;i++)//ciclo para lectura de semestre seleccionado
+		{		
+			try
+			{
+				//Lector de archivos para la posicion i-esima
+				reader=new CSVReader(new FileReader(nombresArchivos[i]));
+				String[] linea=reader.readNext();
 				linea=reader.readNext();
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			if(reader!=null){
-				try{
-					reader.close();
-				}catch(IOException e){
-					e.printStackTrace();	
+				while(linea!=null)
+				{
+					int tres=linea[3].equals("")?0:Integer.parseInt(linea[3]);
+					double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
+					double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
+					//creacion de infraccion en estructura de datos para campos definidos
+					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once));
+					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once));
+					linea=reader.readNext();
 				}
 			}
-		}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				if(reader!=null)
+				{
+					try
+					{
+						reader.close();
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();	
+					}
+				}
+			}
 		}
 	}
 
