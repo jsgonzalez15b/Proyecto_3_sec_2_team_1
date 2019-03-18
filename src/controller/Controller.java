@@ -55,7 +55,7 @@ public class Controller {
 			switch(option)
 			{
 			case 1:
-				view.printMensage("Ingrese el número del semestre que desea cargar");
+				view.printMensage("Ingrese el numero del semestre que desea cargar");
 				int num=sc.nextInt();
 				this.loadMovingViolations(num);
 				System.out.println("Hay "+movingViolationsQueue.size()+" elementos en cola y "+""+movingViolationsStack.size()+" en pila");
@@ -76,7 +76,9 @@ public class Controller {
 				String ingreso=sc.next();
 				String fecha=ingreso.split(",")[0];
 				String hora=ingreso.split(",")[1];
-				IQueue<VOMovingViolations> lista1=consultarPorFechaYHora(fecha,hora);
+				String fecha2=ingreso.split(",")[2];
+				String hora2=ingreso.split(",")[3];
+				IQueue<VOMovingViolations> lista1=consultarPorFechaYHora(fecha,hora,fecha2,hora2);
 				view.printfechaHora(lista1);
 				break; 
 			case 4:
@@ -118,7 +120,7 @@ public class Controller {
 				view.printPorHora(consultarporHoraInicialyFinal(horainicio, horafinal));
 				break; 
 			case 9: 
-				view.printMensage("Ingrese el código de violación");
+				view.printMensage("Ingrese el codigo de violacion");
 				String codigo1=sc.next();
 				double[] a=consultarPromedioVariacion(codigo1);
 				view.printMensage("El FINEAMT promedio es: "+a[0]+" y su desviación estandar es: "+a[1]);
@@ -185,11 +187,15 @@ public class Controller {
 				while(linea!=null)
 				{
 					int tres=linea[3].equals("")?0:Integer.parseInt(linea[3]);
+					//separacion de coordenadas X y Y
+					int seis=linea[3].equals("")?0:Integer.parseInt(linea[6]);
+					int siete=linea[3].equals("")?0:Integer.parseInt(linea[7]);
+					
 					double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
 					double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
 					//creacion de infraccion en estructura de datos para campos definidos
-					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once));
-					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once));
+					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,seis,siete));
+					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,seis,siete));
 					linea=reader.readNext();
 				}
 			}
@@ -342,7 +348,7 @@ public class Controller {
 	}
 
 	//El metodo necesita optimizacion, se necesita de un orden si se quiere un recorrido eficiente.
-	public IQueue<VOMovingViolations> consultarPorPromedioFINEAMT(int val1, int val2)
+	public IQueue<String> consultarPorPromedioFINEAMT(int val1, int val2)
 	{
 		//Queue para retornar la informacion solicitada
 		IQueue<String> retornar= new Queue<>();
@@ -353,7 +359,7 @@ public class Controller {
 		//Iterador externo para recorrido de todos los tipos de infracciones
 		Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
 		//Iterador para recorrido de tipos de infracciones realizados
-		Iterador<VOMovingViolations> iter3= (Iterador<VOMovingViolations>) verificar.iterator();
+		Iterador<String> iter3= (Iterador<String>) verificar.iterator();
 		
 		VOMovingViolations actual=iter.next();
 		VOMovingViolations actual2=iter2.next();
@@ -364,7 +370,8 @@ public class Controller {
 		int total=0;
 		int cantidad=0; 
 		boolean repetida=false;
-		while(iter2.hasNext)//ciclo externo para recorrido de todos los tipos de infracciones
+		int promedioInfraccionActual=0;
+		while(iter2.hasNext())//ciclo externo para recorrido de todos los tipos de infracciones
 		{
 			while(iter.hasNext())//ciclo interno para calculo de AMT promedio
 			{
@@ -381,10 +388,10 @@ public class Controller {
 				retornar.enqueue(violation+promedioInfraccionActual);
 			}
 			//continuacion de recorrido externo para encontrar un nuevo violationCode
-			while(iter2.hasNext&&!repetida)
+			while(iter2.hasNext()&&!repetida)
 			{
 				currentViolation=iter2.next().getViolationCode();
-				while(iter3.hasNext&&!repetida)
+				while(iter3.hasNext()&&!repetida)
 				{
 					if(currentViolation.equals(iter.next().getViolationCode()))
 					{
