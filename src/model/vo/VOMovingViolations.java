@@ -29,11 +29,11 @@ public class VOMovingViolations
 	/**
 	 * Xcoord: elemento 6
 	 */
-	private int coordx;
+	private double coordx;
 	/**
 	 * Ycoord: elemento 7
 	 */
-	private int coordy;
+	private double coordy;
 
 	//elemento 8 no utilizado: TICKETTYPE
 
@@ -73,7 +73,7 @@ public class VOMovingViolations
 	//elemento 17 no utilizado: ROW_ID
 
 	//Constructor
-	public VOMovingViolations(int pId, String pLocation, String pTicketIssueDate, double pTotoalpaid, String pAccidentIndicator, String pDescription, String pViolationCode, double pfineAMT, int pAdressId, double pPenalty1, double pPenalty2, int pCoordx, int pCoordy)
+	public VOMovingViolations(int pId, String pLocation, String pTicketIssueDate, double pTotoalpaid, String pAccidentIndicator, String pDescription, String pViolationCode, double pfineAMT, int pAdressId, double pPenalty1, double pPenalty2, double pCoordx, double pCoordy)
 	{
 		//inicializacion de atributos
 		Id=pId;
@@ -172,12 +172,12 @@ public class VOMovingViolations
 		return penalty2; 
 	}
 
-	public int getX()
+	public double getX()
 	{
 		return coordx;
 	}
 
-	public int getY()
+	public double getY()
 	{
 		return coordy;
 	}

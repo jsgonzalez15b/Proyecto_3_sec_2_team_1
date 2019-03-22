@@ -57,8 +57,8 @@ public class Controller {
 			case 1:
 				view.printMensage("Ingrese el numero del semestre que desea cargar");
 				int num=sc.nextInt();
-				this.loadMovingViolations(num);
-				System.out.println("Hay "+movingViolationsQueue.size()+" elementos en cola y "+""+movingViolationsStack.size()+" en pila");
+				int[] pormes=this.loadMovingViolations(num);
+				view.printCargar(pormes, num,calcularMiniMax());				
 
 				break;
 
@@ -146,7 +146,7 @@ public class Controller {
 	 * Metodo para carga de archivos segun semestre de seleccion
 	 * @param num Semestre a cargar datos (1 para primer semestre, cualquier otro numero para segundo semestre)
 	 */
-	public void loadMovingViolations(int num)
+	public int[] loadMovingViolations(int num)
 	{
 		//estructuras de almacenamiento de infracciones
 		movingViolationsQueue=new Queue<VOMovingViolations>();
@@ -165,7 +165,9 @@ public class Controller {
 		nombresArchivos[9]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_October_2018.csv";
 		nombresArchivos[10]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_November_2018.csv";
 		nombresArchivos[11]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_December_2018.csv";
-		
+		int previo=0;
+		int[] pormes=new int[6];
+		int pos=0; 
 		CSVReader reader=null;
 		int inicio=-1; 
 		if(num==1)
@@ -188,16 +190,19 @@ public class Controller {
 				{
 					int tres=linea[3].equals("")?0:Integer.parseInt(linea[3]);
 					//separacion de coordenadas X y Y
-					int seis=linea[3].equals("")?0:Integer.parseInt(linea[6]);
-					int siete=linea[3].equals("")?0:Integer.parseInt(linea[7]);
+					double cinco=linea[5].equals("")?0:Double.parseDouble(linea[5]);
+					double seis=linea[6].equals("")?0:Double.parseDouble(linea[6]);
 					
 					double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
 					double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
 					//creacion de infraccion en estructura de datos para campos definidos
-					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,seis,siete));
-					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,seis,siete));
+					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,cinco,seis));
+					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,cinco,seis));
 					linea=reader.readNext();
 				}
+				pormes[pos]=movingViolationsStack.size()-previo;
+				previo=movingViolationsStack.size();
+				pos++;
 			}
 			catch(Exception e)
 			{
@@ -218,6 +223,8 @@ public class Controller {
 				}
 			}
 		}
+		
+		return pormes; 
 	}
 
 	public IQueue <VODaylyStatistic> getDailyStatistics () {
@@ -579,6 +586,39 @@ public class Controller {
 	public static void ordenarMergeSort( VOMovingViolations[ ] datos, int pModo ) {
 		mergeSort(datos, 0, datos.length-1, pModo);
 	}
+	
+	
+	public double[] calcularMiniMax(){
+	double[] coordenadas= new double[4];
+	double xmin,xmax,ymin,ymax; 
+	Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
+	VOMovingViolations actual= iter.next();
+	xmin=actual.getX(); 
+	xmax=actual.getX();
+	ymin=actual.getY(); 
+	ymax=actual.getY();
+	while(iter.hasNext()){
+		actual=iter.next(); 
+		if(actual.getX()<xmin){
+			xmin=actual.getX(); 
+		}
+		if(actual.getX()>xmax){
+			xmax=actual.getX(); 
+		}
+		if(actual.getY()<ymin){
+			ymin=actual.getY(); 
+		}
+		if(actual.getY()>ymax){
+			ymax=actual.getY(); 
+		}
+	}
+	coordenadas[0]=xmin; 
+	coordenadas[1]=xmax; 
+	coordenadas[2]=ymin; 
+	coordenadas[3]=ymax;
+	return coordenadas; 
+	}
+	
 
 }
 

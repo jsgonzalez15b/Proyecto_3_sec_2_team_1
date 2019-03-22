@@ -154,5 +154,31 @@ public class MovingViolationsManagerView
 		System.out.println("Cada X corresponde a 100 USD");
 	}
 
+	public void printCargar(int[] pormes, int num, double[] Minmax) {
+		String[] meses= new String[6]; 
+		int sum=0; 
+		if(num==1){
+			meses[0]="Enero:"; 
+			meses[1]="Febrero:"; 
+			meses[2]="Marzo:"; 
+			meses[3]="Abril:"; 
+			meses[4]="Mayo:";
+			meses[5]="Junio"; 
+		}else{
+			meses[0]="Julio:"; 
+			meses[1]="Agosto:"; 
+			meses[2]="Septiembre:"; 
+			meses[3]="Octubre:"; 
+			meses[4]="Noviembre:";
+			meses[5]="Diciembre"; 
+		}
+		for(int i=0; i<pormes.length; i++){
+			System.out.println("En el mes "+meses[i]+" hay "+ pormes[i]+" infracciones registradas");
+			sum+=pormes[i];
+		}
+		System.out.println("En total hay " + sum +" infracciones cargadas");
+		System.out.println("La zona geográfica con las infracciones esta comprendida entre las coordenadas "+ "(" +Minmax[0]+","+Minmax[1]+") para X y " + "(" +Minmax[2]+","+Minmax[3]+") para Y");
+	}
+
 
 }
