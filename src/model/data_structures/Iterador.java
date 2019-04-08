@@ -4,10 +4,10 @@ import java.util.NoSuchElementException;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
-public class Iterador <T> implements java.util.Iterator<T>{
+public class Iterador <K> implements java.util.Iterator<K>{
 
-	Nodo<T> siguiente;
-	public Iterador(Nodo<T> pPrimero) {
+	Nodo<K> siguiente;
+	public Iterador(Nodo<K> pPrimero) {
 		siguiente=pPrimero;
 	}
 	public boolean hasNext() {
@@ -15,11 +15,11 @@ public class Iterador <T> implements java.util.Iterator<T>{
 	}
 
 	
-	public T next() {
+	public K next() {
 		if(siguiente==null) {
 			throw new NoSuchElementException("No hay siguiente");
 		}else {
-			T elemento=siguiente.darElemento();
+			K elemento=siguiente.darElemento();
 			siguiente=siguiente.darSiguiente();
 			return elemento; 
 		}
