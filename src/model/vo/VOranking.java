@@ -12,13 +12,18 @@ public class VOranking {
 	
 	private double deuda;
 	
+	private int streetId; 
 	
 	public VOranking(String pCode, int pNum, double pPorcenacc, double pPorcensinacc, double pDeuda) {
 		violationcode=pCode; 
 		numinfracciones=pNum; 
 		porcenacc=pPorcenacc; 
 		porcensinacc=pPorcensinacc; 
-		deuda=pDeuda; 
+		deuda=pDeuda;
+		streetId=0; 
+	}
+	public void setStreetId(int nuevo) {
+		streetId=nuevo; 
 	}
 	
 	public String darCode() {

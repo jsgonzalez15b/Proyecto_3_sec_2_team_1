@@ -681,13 +681,32 @@ public class Controller {
 	}
 	
 	public void ordenarPorlocalización() {
-		
+		//PENDIENTE
 	}
 	
 	public void franjaFechaHora (double valorinicial, double valorfinal) {
-		
+		//PENDIENTE
 	}
 
+	public VOranking getInformacionloc( int pId){
+		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+		VOMovingViolations actual=iter.next();
+		int total=0; 
+		int accidentes=0; 
+		double deuda=0;
+		double streetId; 
+		while(iter.hasNext()) {
+			if(actual.getAdressId()==pId) {
+				total++;
+				streetId=actual.get
+				if(actual.getAccidentIndicator().equals("Yes")) {
+					accidentes++; 
+				}
+				deuda+=actual.getTotalPaid(); 
+			}
+			actual=iter.next(); 
+		}
+	}
 
 
 }

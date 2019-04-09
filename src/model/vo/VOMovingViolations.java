@@ -69,11 +69,13 @@ public class VOMovingViolations
 	 * ViolationDesc: elemento 16
 	 */	
 	private String description; 
+	
+	private int streetID;
 
 	//elemento 17 no utilizado: ROW_ID
 
 	//Constructor
-	public VOMovingViolations(int pId, String pLocation, String pTicketIssueDate, double pTotoalpaid, String pAccidentIndicator, String pDescription, String pViolationCode, double pfineAMT, int pAdressId, double pPenalty1, double pPenalty2, double pCoordx, double pCoordy)
+	public VOMovingViolations(int pId, String pLocation, String pTicketIssueDate, double pTotoalpaid, String pAccidentIndicator, String pDescription, String pViolationCode, double pfineAMT, int pAdressId, double pPenalty1, double pPenalty2, double pCoordx, double pCoordy, int pStreetId)
 	{
 		//inicializacion de atributos
 		Id=pId;
@@ -89,9 +91,13 @@ public class VOMovingViolations
 		penalty2=pPenalty2;
 		coordx = pCoordx;
 		coordy = pCoordy;
+		streetID=pStreetId; 
 
 	}
 
+	public int getStreetId() {
+		return streetID; 
+	}
 
 	/**
 	 * @return id - Identificador único de la infracción
