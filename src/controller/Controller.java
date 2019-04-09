@@ -17,6 +17,7 @@ import model.data_structures.Queue;
 import model.data_structures.Stack;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
+import model.vo.VOranking;
 import view.MovingViolationsManagerView;
 
 public class Controller {
@@ -33,6 +34,8 @@ public class Controller {
 	 */
 	private IStack<VOMovingViolations> movingViolationsStack;
 
+	private IMaxColaPrioridad<VOMovingViolations> colaprioridad; 
+
 
 	public Controller() {
 		view = new MovingViolationsManagerView();
@@ -40,6 +43,7 @@ public class Controller {
 		//TODO, inicializar la pila y la cola
 		movingViolationsQueue = null;
 		movingViolationsStack = null;
+		colaprioridad=null; 
 	}
 
 	public void run() {
@@ -192,7 +196,7 @@ public class Controller {
 					//separacion de coordenadas X y Y
 					double cinco=linea[5].equals("")?0:Double.parseDouble(linea[5]);
 					double seis=linea[6].equals("")?0:Double.parseDouble(linea[6]);
-					
+
 					double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
 					double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
 					//creacion de infraccion en estructura de datos para campos definidos
@@ -223,7 +227,7 @@ public class Controller {
 				}
 			}
 		}
-		
+
 		return pormes; 
 	}
 
@@ -367,10 +371,10 @@ public class Controller {
 		Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
 		//Iterador para recorrido de tipos de infracciones realizados
 		Iterador<String> iter3= (Iterador<String>) verificar.iterator();
-		
+
 		VOMovingViolations actual=iter.next();
 		VOMovingViolations actual2=iter2.next();
-		
+
 		String violation=actual2.getViolationCode();
 		String currentViolation="";
 		verificar.enqueue(violation);
@@ -406,12 +410,12 @@ public class Controller {
 						violation=currentViolation;
 					}
 				}
-				
+
 			}
 			repetida=false;
-			
+
 		}
-		
+
 		return retornar; 
 	}
 
@@ -586,39 +590,105 @@ public class Controller {
 	public static void ordenarMergeSort( VOMovingViolations[ ] datos, int pModo ) {
 		mergeSort(datos, 0, datos.length-1, pModo);
 	}
-	
-	
+
+
 	public double[] calcularMiniMax(){
-	double[] coordenadas= new double[4];
-	double xmin,xmax,ymin,ymax; 
-	Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
-	VOMovingViolations actual= iter.next();
-	xmin=actual.getX(); 
-	xmax=actual.getX();
-	ymin=actual.getY(); 
-	ymax=actual.getY();
-	while(iter.hasNext()){
-		actual=iter.next(); 
-		if(actual.getX()<xmin){
-			xmin=actual.getX(); 
+		double[] coordenadas= new double[4];
+		double xmin,xmax,ymin,ymax; 
+		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
+		VOMovingViolations actual= iter.next();
+		xmin=actual.getX(); 
+		xmax=actual.getX();
+		ymin=actual.getY(); 
+		ymax=actual.getY();
+		while(iter.hasNext()){
+			actual=iter.next(); 
+			if(actual.getX()<xmin){
+				xmin=actual.getX(); 
+			}
+			if(actual.getX()>xmax){
+				xmax=actual.getX(); 
+			}
+			if(actual.getY()<ymin){
+				ymin=actual.getY(); 
+			}
+			if(actual.getY()>ymax){
+				ymax=actual.getY(); 
+			}
 		}
-		if(actual.getX()>xmax){
-			xmax=actual.getX(); 
-		}
-		if(actual.getY()<ymin){
-			ymin=actual.getY(); 
-		}
-		if(actual.getY()>ymax){
-			ymax=actual.getY(); 
+		coordenadas[0]=xmin; 
+		coordenadas[1]=xmax; 
+		coordenadas[2]=ymin; 
+		coordenadas[3]=ymax;
+		return coordenadas; 
+	}
+
+
+	public MaxColaPrioridad<VOranking> darRankingInfracciones (int N){
+
+		MaxColaPrioridad<VOranking> retornar= new MaxColaPrioridad<>(); 
+		ArrayList<String> agregadas= new ArrayList<>();  
+		while(agregadas.size()<N) {
+			Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+			VOMovingViolations actual=iter.next(); 
+			int masveces=0; 
+			double accidente=0;
+			double deuda=0;
+			VOMovingViolations repetido=actual; 
+			while (iter.hasNext()) { 
+				if(!revisar(agregadas, actual.getViolationCode())) {
+					int veces=0;
+					Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+					VOMovingViolations actual2=iter2.next();
+					while(iter2.hasNext()) {
+						if(actual2.getViolationCode().equals(actual.getViolationCode())) {
+							veces++; 
+							deuda+=actual2.getTotalPaid(); 
+							if(actual2.getAccidentIndicator().equals("Yes")) {
+								accidente++; 
+							}
+						}
+						actual2=iter2.next(); 
+					}
+					if(veces>masveces) {
+						masveces=veces; 
+						repetido=actual; 
+					}else {
+						accidente=0;
+						deuda=0; 
+					}
+					actual=iter.next(); 
+				}else {
+					actual=iter.next(); 
+				}
+			}
+			agregadas.add(repetido.getViolationCode()); 
+			double pPorcenacc=(accidente*100)/masveces; 
+			double pPorcensinacc=100-pPorcenacc; 
+			retornar.agregar(new VOranking(repetido.getViolationCode(),masveces, pPorcenacc, pPorcensinacc, deuda)); 
 		}
 	}
-	coordenadas[0]=xmin; 
-	coordenadas[1]=xmax; 
-	coordenadas[2]=ymin; 
-	coordenadas[3]=ymax;
-	return coordenadas; 
+
+	public boolean revisar(ArrayList<String> arreglo, String codigo) {
+		boolean respuesta=false;
+		for(int i=0; i<arreglo.size() && !respuesta; i++) {
+			if(arreglo.get(i).equals(codigo)) {
+				respuesta=true; 
+			}
+		}
+
+		return respuesta;
 	}
 	
+	public void ordenarPorlocalización() {
+		
+	}
+	
+	public void franjaFechaHora (double valorinicial, double valorfinal) {
+		
+	}
+
+
 
 }
 
