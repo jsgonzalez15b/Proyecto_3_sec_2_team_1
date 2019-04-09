@@ -698,7 +698,7 @@ public class Controller {
 		while(iter.hasNext()) {
 			if(actual.getAdressId()==pId) {
 				total++;
-				streetId=actual.get
+				streetId=actual.getStreetId(); 
 				if(actual.getAccidentIndicator().equals("Yes")) {
 					accidentes++; 
 				}
@@ -706,6 +706,10 @@ public class Controller {
 			}
 			actual=iter.next(); 
 		}
+		double pPorcenacc=(accidentes*100)/total; 
+		double pPorcensinacc=100-pPorcenacc; 
+		VOranking retornar= new VOranking(null, total, pPorcenacc, pPorcensinacc, deuda); 
+		return retornar; 
 	}
 
 
