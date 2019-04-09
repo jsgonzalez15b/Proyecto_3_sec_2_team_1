@@ -23,9 +23,10 @@ public class VOMovingViolations
 	 * addressID: elemento 4
 	 */
 	private int adressId;
-
-	//elemento 5 no utilizado: STREETSEGID
-
+	/**
+	 * STREETSEGID: elemento 5
+	 */
+	private int streetID;
 	/**
 	 * Xcoord: elemento 6
 	 */
@@ -70,7 +71,7 @@ public class VOMovingViolations
 	 */	
 	private String description; 
 	
-	private int streetID;
+	
 
 	//elemento 17 no utilizado: ROW_ID
 
@@ -188,7 +189,8 @@ public class VOMovingViolations
 		return coordy;
 	}
 
-	public int compareTo(VOMovingViolations otro, int pModo) { 
+	public int compareTo(VOMovingViolations otro, int pModo)
+	{ 
 		if(pModo==1) {
 			//Comparo por violationdesc
 			return getViolationDescription().compareTo(otro.getViolationDescription())==0?0:(getViolationDescription().compareTo(otro.getViolationDescription())<0?-1:1);

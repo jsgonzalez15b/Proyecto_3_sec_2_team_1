@@ -15,18 +15,18 @@ public class MovingViolationsManagerView
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
 		System.out.println("---------------------Taller 3----------------------");
 		System.out.println("1. Cree una nueva coleccion de infracciones en movimiento");
-		System.out.println("2. Verificar que no hay ObjectId repetidos entre las facturas");
-		System.out.println("3. Dar infracciones por fecha y hora de inicio");
-		System.out.println("4. Dar promedio de FINEAMT por Codigo de violación");
-		System.out.println("5. Dar infracciones por address_ID y fecha");
-		System.out.println("6. Consultar por rango de FINEAMT");
-		System.out.println("7. Consultar infracciones por cantidad pagada");
-		System.out.println("8. Consultar infracciones por hora inicial y final (Ordenada ascendentemente por VIOLATIONDESC.)");
-		System.out.println("9. Consultar promedio de FINEATME y desviación estandar por codigo de violación");
-		System.out.println("10.Generar gráfica ASCII con el porcentaje de infracciones que tuvieron accidentes por hora del dia ");
-		System.out.println("11. Generar gráfica ASCII con el porcentaje de valor de la deuda por mes");
-		System.out.println("12. Salir");
-		System.out.println("Digite el nï¿½mero de opciï¿½n para ejecutar la tarea, luego presione enter: (Ej., 1):");
+		System.out.println("2. Obtenga las franjas horarias con mayor numero de infracciones");
+		System.out.println("3. Ordenar infracciones por localizacion geografica");
+		System.out.println("4. Obtenga infracciones en un rango de fechas");
+		System.out.println("5. ");
+		System.out.println("6. ");
+		System.out.println("7. ");
+		System.out.println("8. ");
+		System.out.println("9. ");
+		System.out.println("10. ");
+		System.out.println("11. ");
+		System.out.println("12. ");
+		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
 		
 	}
 	
@@ -42,83 +42,7 @@ public class MovingViolationsManagerView
 //			}
 //		}
 //	}
-	public void printOBJECTID(IQueue<Integer> lista) {
-		System.out.println("Se encontraron "+ lista.size() + " elementos");
-		int vez=0; 
-		for (Integer Id : lista) 
-		{
-			System.out.println(Id+"");;
-			vez++; 
-			if(vez==lista.size()){
-				break; 
-			}
-		}
-	}
-	
-	public void printMovingViolations(IStack<VOMovingViolations> violations) {
-		System.out.println("Se encontraron "+ violations.size() + " elementos");
-		for (VOMovingViolations violation : violations) 
-		{
-			System.out.println(violation.objectId() + " " 
-								+ violation.getTicketIssueDate() + " " 
-								+ violation.getLocation()+ " " 
-								+ violation.getViolationDescription());
-		}
-	}
-	
-	public void printMensage(String mensaje) {
-		System.out.println(mensaje);
-	}
 
-	public void printfechaHora(IQueue<VOMovingViolations> lista1) {
-		System.out.println("Se encontraron "+ lista1.size() + " elementos");
-		int vez=0; 
-		for(VOMovingViolations vo: lista1){
-			System.out.println(vo.objectId()+","+vo.getTicketIssueDate());
-			vez++;
-			if(vez==lista1.size()){
-				break; 
-			}
-		}
-		
-	}
-
-	public void printAddresId(IStack<VOMovingViolations> lista1) {
-		System.out.println("Se encontraron "+ lista1.size() + " elementos");
-		int vez=0;
-		for(VOMovingViolations vo: lista1){
-			System.out.println(vo.objectId()+","+vo.getTicketIssueDate()+","+vo.getAdressId());
-			vez++;
-			if(vez==lista1.size()){
-				break;
-			}
-		}
-	}
-
-	public void printTotalPagado(IStack<VOMovingViolations> lista1) {
-		System.out.println("Se encontraron "+ lista1.size() + " elementos");
-		int vez=0;
-		for(VOMovingViolations vo: lista1){
-			System.out.println(vo.objectId()+","+vo.getTicketIssueDate()+","+vo.getTotalPaid());
-			vez++;
-			if(vez==lista1.size()){
-				break;
-			}
-		}		
-	}
-
-	public void printPorHora(IQueue<VOMovingViolations> lista) {
-		// TODO Auto-generated method stub
-		System.out.println("Se encontraron "+ lista.size()+" elementos");
-		int vez=0; 
-		for(VOMovingViolations vo: lista) {
-			vez++;
-			System.out.println(vo.objectId()+","+vo.getTicketIssueDate()+","+vo.getViolationDescription());
-			if(vez==lista.size()) {
-				break; 
-			}
-		}
-	}
 
 	public void printASCII(int[] lista) {
 		// TODO Auto-generated method stub
@@ -154,7 +78,13 @@ public class MovingViolationsManagerView
 		System.out.println("Cada X corresponde a 100 USD");
 	}
 
-	public void printCargar(int[] pormes, int num, double[] Minmax) {
+	public void printMensage(String mensaje) 
+	{
+		System.out.println(mensaje);
+	}
+	
+	public void printCargar(int[] pormes, int num, double[] Minmax)
+	{
 		String[] meses= new String[6]; 
 		int sum=0; 
 		if(num==1){
@@ -179,6 +109,25 @@ public class MovingViolationsManagerView
 		System.out.println("En total hay " + sum +" infracciones cargadas");
 		System.out.println("La zona geográfica con las infracciones esta comprendida entre las coordenadas "+ "(" +Minmax[0]+","+Minmax[1]+") para X y " + "(" +Minmax[2]+","+Minmax[3]+") para Y");
 	}
+	
+	/**
+	 * Metodo que imprime N franjas horarias con el mayor numero de infracciones
+	 * @param info Arreglo de Strings que contiene: franja, numero de infracciones, porcentaje sin y con, y valor total
+	 */
+	public void printNFranjas(String[] info, int num)
+	{
+		
+		
+	}
 
-
+	
+	/**
+	 * Metodo que imprime N Infracciones en un rango de tiempo determinado
+	 * @param pInfracciones Arreglo de Strings que contiene: PREGUNTAR
+	 */
+	public void printInfraccionesRango(String[] pInfracciones)
+	{
+		
+		
+	}
 }
