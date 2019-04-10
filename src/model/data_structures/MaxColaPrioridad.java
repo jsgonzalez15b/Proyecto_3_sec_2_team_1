@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import java.util.Iterator;
+
 public class MaxColaPrioridad <T extends Comparable<T>> implements IMaxColaPrioridad<T>{
 
 	private int tamano;
@@ -74,5 +76,9 @@ public class MaxColaPrioridad <T extends Comparable<T>> implements IMaxColaPrior
 
 	public boolean esVacia() {
 		return primero==null?true:false; 
+	}
+	
+	public Iterator<T> iterator() {
+		return new Iterador<T>(primero);
 	}
 }

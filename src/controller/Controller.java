@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
+import com.sun.org.apache.xerces.internal.util.IntStack;
 
 import model.data_structures.IMaxColaPrioridad;
 import model.data_structures.IQueue;
@@ -16,10 +17,14 @@ import model.data_structures.Iterador;
 import model.data_structures.MaxColaPrioridad;
 import model.data_structures.Nodo;
 import model.data_structures.Queue;
+import model.data_structures.RedBlackBST;
 import model.data_structures.Stack;
+import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 import model.vo.VOranking;
+import sun.awt.image.VolatileSurfaceManager;
+import sun.nio.cs.ext.ISCII91;
 import view.MovingViolationsManagerView;
 
 public class Controller {
@@ -29,7 +34,6 @@ public class Controller {
 	/**
 	 * Cola donde se van a cargar los datos de los archivos
 	 */
-	private IQueue<VOMovingViolations> movingViolationsQueue;
 
 	/**
 	 * Pila donde se van a cargar los datos de los archivos
@@ -47,7 +51,6 @@ public class Controller {
 		view = new MovingViolationsManagerView();
 
 		//TODO, inicializar la pila y las colas
-		movingViolationsQueue = null;
 		movingViolationsStack = null;
 		colaprioridad=null; 
 	}
@@ -126,8 +129,8 @@ public class Controller {
 	public int[] loadMovingViolations(int num)
 	{
 		//estructuras de almacenamiento de infracciones
-		movingViolationsQueue=new Queue<VOMovingViolations>();
 		movingViolationsStack= new Stack<VOMovingViolations>();
+		colaprioridad=new MaxColaPrioridad<VOMovingViolations>(); 
 		//creacion e inicializacion de arreglo con nombre de los archivos de infracciones por mes 
 		String[] nombresArchivos=new String[12];
 		nombresArchivos[0]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_January_2018_ordered.csv";
@@ -179,7 +182,7 @@ public class Controller {
 					
 					//creacion de infraccion en estructura de datos para campos definidos
 					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,cinco,seis,cuatro));
-					movingViolationsQueue.enqueue(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,cinco,seis,cuatro));
+					colaprioridad.agregar(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,cinco,seis,cuatro));
 					linea=reader.readNext();
 				}
 				pormes[pos]=movingViolationsStack.size()-previo;
@@ -236,43 +239,43 @@ public class Controller {
 		return null;
 	}
 	
-	public IQueue <VODaylyStatistic> getDailyStatistics () {
-		IQueue<VODaylyStatistic> lista= new Queue<VODaylyStatistic>();
-		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
-		if(iter.hasNext()) {
-			VOMovingViolations actual=(VOMovingViolations)iter.next();
-			String fecha=actual.getTicketIssueDate().split("T")[0];
-			int numInfracciones=0;
-			int numAccidentes=0;
-			double numafintotal=0;
-			int vez=0; 
-			while(vez<movingViolationsQueue.size()) {
-				while(actual.getTicketIssueDate().split("T")[0].equals(fecha)) {
-					numafintotal+=actual.getFINEAMT();
-					numInfracciones++;
-					if(actual.getAccidentIndicator().equals("Yes")) {
-						numAccidentes++;
-					}
-					vez++; 
-					actual=iter.next();
-				}
-				lista.enqueue(new VODaylyStatistic(fecha, numAccidentes, numInfracciones, numafintotal));
-				numAccidentes=0;
-				numafintotal=0;
-				numInfracciones=0;
-				fecha=actual.getTicketIssueDate().split("T")[0];
-			}
-			return lista; 
-		}
-		return lista;
-	}
+//	public IQueue <VODaylyStatistic> getDailyStatistics () {
+//		IQueue<VODaylyStatistic> lista= new Queue<VODaylyStatistic>();
+//		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
+//		if(iter.hasNext()) {
+//			VOMovingViolations actual=(VOMovingViolations)iter.next();
+//			String fecha=actual.getTicketIssueDate().split("T")[0];
+//			int numInfracciones=0;
+//			int numAccidentes=0;
+//			double numafintotal=0;
+//			int vez=0; 
+//			while(vez<movingViolationsQueue.size()) {
+//				while(actual.getTicketIssueDate().split("T")[0].equals(fecha)) {
+//					numafintotal+=actual.getFINEAMT();
+//					numInfracciones++;
+//					if(actual.getAccidentIndicator().equals("Yes")) {
+//						numAccidentes++;
+//					}
+//					vez++; 
+//					actual=iter.next();
+//				}
+//				lista.enqueue(new VODaylyStatistic(fecha, numAccidentes, numInfracciones, numafintotal));
+//				numAccidentes=0;
+//				numafintotal=0;
+//				numInfracciones=0;
+//				fecha=actual.getTicketIssueDate().split("T")[0];
+//			}
+//			return lista; 
+//		}
+//		return lista;
+//	}
 
 
 
 	public double[] calcularMiniMax(){
 		double[] coordenadas= new double[4];
 		double xmin,xmax,ymin,ymax; 
-		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
+		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
 		VOMovingViolations actual= iter.next();
 		xmin=actual.getX(); 
 		xmax=actual.getX();
@@ -342,8 +345,9 @@ public class Controller {
 			agregadas.add(repetido.getViolationCode()); 
 			double pPorcenacc=(accidente*100)/masveces; 
 			double pPorcensinacc=100-pPorcenacc; 
-			retornar.agregar(new VOranking(repetido.getViolationCode(),masveces, pPorcenacc, pPorcensinacc, deuda)); 
+			retornar.agregar(new VOranking(repetido.getViolationCode(),masveces, pPorcenacc, pPorcensinacc, deuda,null, 0)); 
 		}
+		return retornar; 
 	}
 
 	public boolean revisar(ArrayList<String> arreglo, String codigo) {
@@ -357,9 +361,58 @@ public class Controller {
 		return respuesta;
 	}
 	
-	public void ordenarPorlocalización() {
-		//PENDIENTE
+	public boolean revisarTupla(ArrayList<Tupla> arreglo, Tupla num) {
+		boolean respuesta=false; 
+		for (int i=0; i<arreglo.size() &&!respuesta; i++) {
+			if(arreglo.get(i).compareTo(num)==0) {
+				respuesta=true; 
+			}
+		}
+		return respuesta; 
 	}
+	
+	public VOranking ordenarPorlocalización(double[] entrada) throws Exception {
+		Tupla buscada= new Tupla(entrada[0], entrada[1]); 
+		// Crear el arbol ordenado por las llaves(Tuplas)
+		RedBlackBST<Tupla,IStack<VOMovingViolations>> arbol= new RedBlackBST<>();
+		ArrayList<Tupla> agregadas= new ArrayList<>(); 
+		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
+		VOMovingViolations actual=iter.next(); 
+		Tupla llave2=new Tupla(0,0); 
+		while(iter.hasNext()) {
+			Tupla llave=new Tupla(actual.getX(),actual.getY()); 
+			if(!revisarTupla(agregadas, llave)) {
+				IStack<VOMovingViolations> porAgregar= new Stack<>();
+				Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
+				VOMovingViolations actual2=iter2.next(); 
+				while (iter2.hasNext()) {
+					llave2.setCoord(actual2.getX(),actual2.getY());
+					if(llave.compareTo(llave2)==0) {
+						porAgregar.push(actual2);
+					}
+				}
+				arbol.put(llave, porAgregar);				
+			}
+			actual=iter.next(); 
+		}
+		IStack<VOMovingViolations> buscar=arbol.get(buscada);
+		Iterador<VOMovingViolations> iter3=(Iterador<VOMovingViolations>) buscar.iterator();
+		VOMovingViolations actual3=iter3.next(); 
+		int acc=0; 
+		double deuda=0; 
+		while(iter3.hasNext()) {
+			if(actual3.getAccidentIndicator().equals("Yes")) {
+				acc++; 
+				deuda+=actual3.getTotalPaid(); 
+			}
+		}
+		double conacc=(acc*100)/buscar.size(); 
+		double sinacc=100-conacc; 
+				
+		return new VOranking(null, buscar.size(),conacc, sinacc,deuda,buscar.darPrimero().darElemento().getLocation(),buscar.darPrimero().darElemento().getStreetId());
+	}
+
+	
 	
 	public void franjaFechaHora (double valorinicial, double valorfinal) {
 		//PENDIENTE
@@ -371,7 +424,7 @@ public class Controller {
 		int total=0; 
 		int accidentes=0; 
 		double deuda=0;
-		double streetId; 
+		int streetId=0; 
 		while(iter.hasNext()) {
 			if(actual.getAdressId()==pId) {
 				total++;
@@ -385,7 +438,7 @@ public class Controller {
 		}
 		double pPorcenacc=(accidentes*100)/total; 
 		double pPorcensinacc=100-pPorcenacc; 
-		VOranking retornar= new VOranking(null, total, pPorcenacc, pPorcensinacc, deuda); 
+		VOranking retornar= new VOranking(null, total, pPorcenacc, pPorcensinacc, deuda, null,streetId ); 
 		return retornar; 
 	}
 

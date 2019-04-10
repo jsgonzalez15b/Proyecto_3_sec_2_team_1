@@ -1,6 +1,6 @@
 package model.data_structures;
 
-public interface IMaxColaPrioridad<T extends Comparable<T>> {
+public interface IMaxColaPrioridad<T> extends Iterable<T> {
 
 	/**
 	 * Retornar el numero de elementos en el arreglo

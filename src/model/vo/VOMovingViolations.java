@@ -3,7 +3,7 @@ package model.vo;
 /**
  * Representation of a Trip object
  */
-public class VOMovingViolations 
+public class VOMovingViolations implements Comparable<VOMovingViolations>
 {
 
 	//Atributos de infraccion
@@ -189,18 +189,9 @@ public class VOMovingViolations
 		return coordy;
 	}
 
-	public int compareTo(VOMovingViolations otro, int pModo)
+	public int compareTo(VOMovingViolations otro)
 	{ 
-		if(pModo==1) {
-			//Comparo por violationdesc
-			return getViolationDescription().compareTo(otro.getViolationDescription())==0?0:(getViolationDescription().compareTo(otro.getViolationDescription())<0?-1:1);
-
-		}else if(pModo==2) {
-			//Comparo fecha de infracción
-			return getTicketIssueDate().split("T")[0].compareTo(otro.getTicketIssueDate().split("T")[0])==0?0:(this.ticketIssueDate.split("T")[0].compareTo(otro.getTicketIssueDate().split("T")[0])<0?-1:1);
-		}else {
-			return 0; 
+		return this.Id<otro.objectId()?-1:(this.Id>otro.objectId()?1:0); 
 		}
-	}
 }
 

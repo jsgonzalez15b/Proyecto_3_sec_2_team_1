@@ -1,31 +1,37 @@
 package model.vo;
 
-public class VOranking {
+public class VOranking implements Comparable<VOranking> {
 
 	private String violationcode; 
-	
+
 	private int numinfracciones; 
-	
+
 	private double porcenacc; 
-	
+
 	private double porcensinacc;
-	
+
 	private double deuda;
-	
+
 	private int streetId; 
-	
-	public VOranking(String pCode, int pNum, double pPorcenacc, double pPorcensinacc, double pDeuda) {
+	private String location; 
+
+	public VOranking(String pCode, int pNum, double pPorcenacc, double pPorcensinacc, double pDeuda, String pLocation,int p) {
 		violationcode=pCode; 
 		numinfracciones=pNum; 
 		porcenacc=pPorcenacc; 
 		porcensinacc=pPorcensinacc; 
 		deuda=pDeuda;
-		streetId=0; 
+		streetId=p; 
+		location=pLocation; 
 	}
-	public void setStreetId(int nuevo) {
-		streetId=nuevo; 
+
+	public String darLocation() {
+		return location; 
 	}
-	
+	public int darSreetiId() {
+		return streetId; 
+	}
+
 	public String darCode() {
 		return violationcode;
 	}
@@ -41,5 +47,15 @@ public class VOranking {
 	public double darTotalDeuda() {
 		return deuda; 
 	}
-		
+	public int compareTo(VOranking otro) {
+		int result=0; 
+		if(this.violationcode.compareTo(otro.darCode())<0) {
+			result =-1; 
+		}else if (this.violationcode.compareTo(otro.darCode())>0) {
+			result=1; 
+		}
+		return result; 
+	}
+
+
 }
