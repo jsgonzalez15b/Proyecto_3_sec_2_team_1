@@ -93,11 +93,19 @@ public class NodoArbol<k extends Comparable<k>,T> {
 		return llave; 
 	}
 	public boolean esRojo() {
+
 		return color==Color.ROJO?true:false; 
 	}
 
 	public void setColor(Color pcolor) {
 		color=pcolor; 
+		if(pcolor==Color.ROJO&&padre.esRojo()){
+			if(this.darPadre().darDerecho().darLlave().compareTo(this.darLlave())==0){
+				this.rotarIzquierda();
+			}else{
+				this.rotarDerecha();
+			}
+		}
 	}
 
 	public NodoArbol<k,T> darPadre(){
@@ -223,12 +231,17 @@ public class NodoArbol<k extends Comparable<k>,T> {
 					if(padre.esRojo()) {
 						agregar.rotarDerecha();
 					}
+				}else{
+					izquierdo.put(key, val);
 				}
 			}else {
 				if(derecho==null) {
 					setDerecho(agregar);
 					agregar.setPadre(this);
+					agregar.rotarIzquierda();
 
+				}else{
+					derecho.put(key, val);
 				}
 			}
 		}
@@ -236,22 +249,26 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	}
 
 	public void rotarDerecha() {
-		NodoArbol<k,T> padresum=padre.darPadre(); 
-		padresum.setPadre(padre);
-		padresum.setIzquierdo(padre.darDerecho());
-		padre.setDerecho(padresum);
-		padre.setPadre(padresum.darPadre());
-		padresum.setColor(Color.NEGRO);
-		padre.setColor(Color.ROJO);
-		this.setColor(Color.NEGRO);
+		if(darPadre()!=null){
+			NodoArbol<k,T> padresum=padre.darPadre(); 
+			padresum.setPadre(padre);
+			padresum.setIzquierdo(padre.darDerecho());
+			padre.setDerecho(padresum);
+			padre.setPadre(padresum.darPadre());
+			padresum.setColor(Color.NEGRO);
+			padre.setColor(Color.ROJO);
+			this.setColor(Color.NEGRO);
+		}
 	}
 	public void rotarIzquierda() {
-		NodoArbol<k,T> padresum=padre.darPadre();
-		padresum.setIzquierdo(this);
-		this.setIzquierdo(padre);
-		padre.setPadre(this);
-		this.setPadre(padresum);
-		this.setColor(Color.NEGRO);
-		this.darIzquierdo().setColor(Color.ROJO);
+		if(darPadre()!=null){
+			NodoArbol<k,T> padresum=padre.darPadre();
+			padresum.setIzquierdo(this);
+			this.setIzquierdo(padre);
+			padre.setPadre(this);
+			this.setPadre(padresum);
+			this.setColor(Color.NEGRO);
+			this.darIzquierdo().setColor(Color.ROJO);
+		}
 	}
 }

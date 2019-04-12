@@ -78,9 +78,15 @@ public class RedBlackBST <k extends Comparable<k>,T>{
 		if(isEmpty()) {
 			NodoArbol<k,T> agregar= new NodoArbol<>(key, val,Color.NEGRO);
 			raiz=agregar;
-	
+			elementos++; 	
 		}else {
 			raiz.put(key, val);
+			if (raiz.darPadre()!=null){
+				NodoArbol padre=raiz.darPadre(); 
+				while(raiz.darPadre()!=null){
+					raiz=raiz.darPadre();
+				}
+			}
 		}
 	}
 }
