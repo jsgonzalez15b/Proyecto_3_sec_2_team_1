@@ -218,7 +218,9 @@ public class Controller {
 	 */
 	public String[] nFranjasHorarias(int nFranjas)
 	{
-		//A PENDIENTE
+		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
+		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
+		//location es inicializado con la franja horaria,streetsegid como 0
 		return null;
 	}
 	

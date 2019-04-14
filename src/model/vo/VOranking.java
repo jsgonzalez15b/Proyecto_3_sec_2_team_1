@@ -1,7 +1,8 @@
 package model.vo;
 
-public class VOranking implements Comparable<VOranking> {
-
+public class VOranking implements Comparable<VOranking> 
+{
+	//Atributos estadisticos de infracciones (para uso general)
 	private String violationcode; 
 
 	private int numinfracciones; 
@@ -13,18 +14,22 @@ public class VOranking implements Comparable<VOranking> {
 	private double deuda;
 
 	private int streetId; 
+	
 	private String location; 
 
+	//Constructor
 	public VOranking(String pCode, int pNum, double pPorcenacc, double pPorcensinacc, double pDeuda, String pLocation,int p) {
 		violationcode=pCode; 
 		numinfracciones=pNum; 
 		porcenacc=pPorcenacc; 
 		porcensinacc=pPorcensinacc; 
 		deuda=pDeuda;
-		streetId=p; 
 		location=pLocation; 
+		streetId=p; 
+		
 	}
-
+	
+	//Métodos
 	public String darLocation() {
 		return location; 
 	}
@@ -46,6 +51,35 @@ public class VOranking implements Comparable<VOranking> {
 	}
 	public double darTotalDeuda() {
 		return deuda; 
+	}
+	
+	/**
+	 * Metodo para incrementar actualizar la información de las infracciones por criterio (numinfracciones, porcenacc, porcensinacc, deuda)
+	 * @param pAccidente booleano que indica si hubo accidente o no
+	 * @param pDeuda	 entero que indica deuda a agregar
+	 */
+	public void actualizarInfo(boolean pAccidente, int pDeuda)
+	{
+		
+		int numeroPorcentaje=0;
+		if(pAccidente)
+		{
+			numeroPorcentaje=(int) (numinfracciones*porcenacc); //obtiene el numero de infracciones con accidente para actualizarlo
+			numeroPorcentaje++; //actualiza el numero de infracciones
+			numinfracciones++; //aumenta el numero de infracciones
+			porcenacc= numinfracciones/numeroPorcentaje;
+			porcensinacc= 1-porcenacc;
+		}
+		else
+		{
+			numeroPorcentaje=(int) (numinfracciones*porcensinacc); //obtiene el numero de infracciones sin accidente para actualizarlo
+			numeroPorcentaje++; //actualiza el numero de infracciones
+			numinfracciones++; //aumenta el numero de infracciones
+			porcensinacc= numinfracciones/numeroPorcentaje;
+			porcenacc= 1-porcensinacc;
+		}
+		
+		
 	}
 	public int compareTo(VOranking otro) {
 		int result=0; 
