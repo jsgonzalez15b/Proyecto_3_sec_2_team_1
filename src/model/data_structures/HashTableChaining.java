@@ -32,7 +32,7 @@ public class HashTableChaining <K extends Comparable<K>,V> implements IHashTable
 	 */
 	public int	hash(K pLlave)
 	{
-		return hashCode(pLlave)& 0x7fffffff %nCarga; //PREGUNTAR
+		return pLlave.hashCode()& 0x7fffffff %nCarga; 
 	}
 
 	/**

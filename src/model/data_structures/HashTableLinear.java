@@ -32,7 +32,7 @@ public class HashTableLinear<K extends Comparable<K>,V> implements IHashTableLin
 	 */
 	public int	hash(K pLlave)
 	{
-		return hashCode(pLlave)& 0x7fffffff %nCarga; //PREGUNTAR
+		return pLlave.hashCode()& 0x7fffffff %nCarga; 
 	}
 
 	/**
