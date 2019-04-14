@@ -27,13 +27,12 @@ import sun.awt.image.VolatileSurfaceManager;
 import sun.nio.cs.ext.ISCII91;
 import view.MovingViolationsManagerView;
 
-public class Controller {
-
-	private MovingViolationsManagerView view;
-
+public class Controller
+{
 	/**
-	 * Cola donde se van a cargar los datos de los archivos
+	 * View para interaccion con usuario
 	 */
+	private MovingViolationsManagerView view;
 
 	/**
 	 * Pila donde se van a cargar los datos de los archivos
@@ -55,7 +54,8 @@ public class Controller {
 		colaprioridad=null; 
 	}
 
-	public void run() {
+	public void run()
+	{
 		Scanner sc = new Scanner(System.in);
 		boolean fin = false;
 
@@ -221,6 +221,20 @@ public class Controller {
 		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
 		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
 		//location es inicializado con la franja horaria,streetsegid como 0
+		
+		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+		
+		//inicializacion de VOranking como bloques de informacion promedio por rango de hora
+		VOranking[] franjas = new VOranking[24];
+		for (int i = 0; i<10;i++)
+		{
+			franjas[i]= new VOranking("", 0, 1, 1, 0, "0"+i+":00:00 - 0"+i+":59:59",0);
+		}
+		for (int j = 10; j<24;j++)
+		{
+			franjas[j]= new VOranking("", 0, 1, 1, 0, j+":00:00 - "+j+":59:59",0);
+		}
+		
 		return null;
 	}
 	
