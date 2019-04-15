@@ -9,19 +9,19 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	//Atributos
 
 	/**
-	 * objeto genérico almacenado por el nodo. 
+	 * objeto genÃ©rico almacenado por el nodo. 
 	 */
 	private T elemento;
 
 
 	Color color; 
 	/**
-	 * Relación de cola/pila en lista simplemente encadenada
+	 * RelaciÃ³n de cola/pila en lista simplemente encadenada
 	 */
 	private NodoArbol<k,T> izquierdo;
 
 	/**
-	 * Relación de cola/pila en lista doblemente encadenada
+	 * RelaciÃ³n de cola/pila en lista doblemente encadenada
 	 */
 	private NodoArbol<k,T> derecho;
 
@@ -31,7 +31,7 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	private boolean rojo; 
 
 	private boolean negro; 
-	//Método Constructor
+	//MÃ©todo Constructor
 	public NodoArbol (k pllave, T pElemento, Color pColor)
 	{
 		izquierdo=null; 
@@ -44,13 +44,13 @@ public class NodoArbol<k extends Comparable<k>,T> {
 		padre=null; 
 	}
 
-	//Métodos del nodo
+	//MÃ©todos del nodo
 
 	public void setPadre(NodoArbol<k,T>pPadre) {
 		padre=pPadre; 
 	}
 	/**
-	 * método encargado de reasignar el nodo siguiente. 
+	 * mÃ©todo encargado de reasignar el nodo siguiente. 
 	 */
 	public void setIzquierdo(NodoArbol<k,T> pIzquierdo)
 	{
@@ -58,7 +58,7 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	}
 
 	/**
-	 * método encargado de reasignar el nodo siguiente. 
+	 * mÃ©todo encargado de reasignar el nodo siguiente. 
 	 */
 	public void setDerecho(NodoArbol<k,T> pDerecho)
 	{
@@ -66,7 +66,7 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	}
 
 	/**
-	 * método encargado de retornar el elemento almacenado en el nodo. 
+	 * mÃ©todo encargado de retornar el elemento almacenado en el nodo. 
 	 */
 	public T darElemento()
 	{
@@ -74,7 +74,7 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	}
 
 	/**
-	 * método que retorna el siguiente nodo. 
+	 * mÃ©todo que retorna el siguiente nodo. 
 	 */
 	public NodoArbol<k,T> darIzquierdo()
 	{
@@ -82,7 +82,7 @@ public class NodoArbol<k extends Comparable<k>,T> {
 	}
 
 	/**
-	 * método que retorna el nodo anterior. 
+	 * mÃ©todo que retorna el nodo anterior. 
 	 */
 	public NodoArbol<k,T> darDerecho()
 	{
@@ -270,5 +270,14 @@ public class NodoArbol<k extends Comparable<k>,T> {
 			this.setColor(Color.NEGRO);
 			this.darIzquierdo().setColor(Color.ROJO);
 		}
+	}
+	public void imprimir() {
+		if(izquierdo!=null) {
+			izquierdo.imprimir(); 
+		}
+		if(derecho!=null) {
+			derecho.imprimir(); 
+		}
+		System.out.println(this.llave+","+this.elemento);
 	}
 }
