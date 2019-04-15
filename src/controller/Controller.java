@@ -132,8 +132,15 @@ public class Controller
 				view.printVORanking(getInformacionloc(entrada));
 				
 			case 9: 
-				
+				view.printMensage("Ingrese el rango de horas con el siguiente formato (inicial-final): HH:MM:SS/HH:MM:SS");
+				String RangoHora = sc.next();
+				String[] infraccionesRangoHora=this.infraccionesFecha(RangoHora);
+				view.printInfraccionesHora(infraccionesRangoHora);
 			case 10:
+				view.printMensage("Ingrese el numero de localizaciones");
+				int nlugares= sc.nextInt();
+				String[] coordenadasNesimas = infoNLocalizaciones(nlugares);
+				view.printCoordenadasNesimas(coordenadasNesimas);
 				
 			case 11:
 				
@@ -667,7 +674,23 @@ public class Controller
 		
 		return retornar; 
 	}
-
+	/**
+	 * 2C Retorna un arreglo String con la informacion de las infracciones que estan dentro del rango y las que estan fuera del rango de horas recibido
+	 */
+	public String[] infoInfraccionesHora(String pHoras)
+	{
+		//PENDING
+		return null;
+	}
+	/**
+	 * 3C Retorna un arreglo String de tamano NLocalizaciones con los pares de coordenadas con mayor numero de infracciones
+	 */
+	public String[] infoNLocalizaciones(int NLocalizaciones)
+	{
+		//PENDING
+		return null;
+	}
+	
 
 }
 
