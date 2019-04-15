@@ -27,8 +27,8 @@ public class MovingViolationsManagerView
 		System.out.println("6. Consulta por xCoord y Y Coord");
 		System.out.println("7.  Buescar frnajas horarias por rango de deuda acumulada");
 		System.out.println("8. Obtener información por AdressId");
-		System.out.println("9. ");
-		System.out.println("10. ");
+		System.out.println("9. Consulte las infracciones en un rango de horas.");
+		System.out.println("10. Obtener ranking de las N localizaciones coordenadas con mayor cantidad de infracciones.");
 		System.out.println("11. Gráfica ASCII con la infromación de los tipos de infracciones ");
 		System.out.println("12. ");
 		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
@@ -165,5 +165,22 @@ public class MovingViolationsManagerView
 		
 	}
 	
+	/**
+	 * Metodo que imprime N Infracciones en un rango al dia determinado
+	 * @param pMensaje Arreglo de Strings que contiene informacion dentro y fuera del rango.
+	 */
+	public void printInfraccionesHora (String[] pMensaje)
+	{
+		//PENDING
+	}
+	
+	/**
+	 * Metodo que imprime N coordenadas con el mayor numero de infracciones
+	 * @param coordenadasNesimas Arreglo de Strings que contiene informacion de coordenadas.
+	 */
+	public void printCoordenadasNesimas(String[] coordenadasNesimas)
+	{
+		//PENDING
+	}
 	
 }
