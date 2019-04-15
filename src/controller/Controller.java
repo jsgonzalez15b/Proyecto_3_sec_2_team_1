@@ -94,7 +94,7 @@ public class Controller
 				
 				break;
 			case 4:
-				view.printMensage("Ingrese el rango de fechas con el siguiente formato (inicial-final): AAAA/MM/DD-AAAA/MM/DD");
+				view.printMensage("Ingrese el rango de fechas con el siguiente formato (inicial-final): AAAA-MM-DD/AAAA-MM-DD");
 				String fechaRango = sc.next();
 				String[] infraccionesRango=this.infraccionesFecha(fechaRango);
 				view.printInfraccionesRango(infraccionesRango);
@@ -240,11 +240,11 @@ public class Controller
 		VOranking[] franjas = new VOranking[24];
 		for (int i = 0; i<10;i++)
 		{
-			franjas[i]= new VOranking("", 0, 1, 1, 0, "0"+i+":00:00 - 0"+i+":59:59",0);
+			franjas[i]= new VOranking("", 0, 100, 100, 0, "0"+i+":00:00 - 0"+i+":59:59",0);
 		}
 		for (int j = 10; j<24;j++)
 		{
-			franjas[j]= new VOranking("", 0, 1, 1, 0, j+":00:00 - "+j+":59:59",0);
+			franjas[j]= new VOranking("", 0, 100, 100, 0, j+":00:00 - "+j+":59:59",0);
 		}
 		while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por violacion
 		{
@@ -264,7 +264,7 @@ public class Controller
 		{
 			rankingActual = estadisticasNInfracciones.delMax();
 			//mensaje requerido para infracciones
-			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" NÃºmero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" Numero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		}
 		return mensaje;
 	}
@@ -310,25 +310,76 @@ public class Controller
 			pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
 			rankingActual.actualizarInfo(acc,pDeuda );
 		}
-		mensaje= " Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+		mensaje= " Numero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		return mensaje;
 	}
 	
 	
 	/**
-	 * 3A Metodo para obtener las infracciones dentro de un rango determinado
+	 * 3A Metodo para obtener las infracciones dentro de un rango determinado en un arbol balanceado
+	 * @param pRango formato AAAA-MM-DD/AAAA-MM-DD de fechas iniciales y finales
 	 */
 	public String[] infraccionesFecha(String pRango)
 	{
-		//Separacion de fechas parametro
-		String fechaInicial = (pRango.split("-"))[0];
-		String fechaFinal = (pRango.split("-"))[1];
-		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
-		RedBlackBST<String,VOranking> arbolBalanceado = new RedBlackBST(); //arbol balanceado de estadisticas por fecha
-		
+		//idea: Inscribir las fechas en el arbol que esten en el rango ingresado con llave fecha y valor VOranking, para no modificar el codigo
+		//del arbol rojo negro se verifica que la fecha a inscribir no existe todavia
+		try
+		{
+			//Separacion de fechas parametro
+			String fechaInicial = (pRango.split("/"))[0];
+			String fechaFinal = (pRango.split("/"))[1];
+			String fechaActual = ""; //fecha de infraccion
+
+			IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+			IStack<String> copiaFechas = new Stack<String>(); //copia de fechas encontradas para retorno de mensajes
+			RedBlackBST<String,VOranking> arbolBalanceado = new RedBlackBST(); //arbol balanceado de estadisticas por fecha
+			VOMovingViolations violacionActual=null; //violacion de recorrido
+			VOranking estadisticaActual=null; //estadistica de recorrido
+			int n = 0;// numero de fechas distintivas
+			
+			boolean acc = false;//indicador de accidente
+			int pDeuda = 0; 
+
+			while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por fechas
+			{
+				violacionActual=copiaViolationsStack.pop();
+				fechaActual=(violacionActual.getTicketIssueDate().split("T"))[0];
+				if(fechaActual.compareTo(fechaInicial)>0&&fechaActual.compareTo(fechaFinal)<0)
+				{
+					acc = violacionActual.getAccidentIndicator().equals("Yes");
+					pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
+					if(arbolBalanceado.contains(fechaActual))
+					{
+						arbolBalanceado.get(fechaActual).actualizarInfo(acc, pDeuda);
+					}
+					else
+					{
+						//id como fecha, 1 infraccion, porcentaje inicial, porcentaje con inicial, deuda infraccion, no hay location comun, no hay streetsegid comun
+						estadisticaActual=new VOranking(fechaActual,1,100,100,pDeuda,"",0); 
+						arbolBalanceado.put(fechaActual,estadisticaActual );
+						copiaFechas.push(fechaActual); //se anade la nueva fecha al arreglo
+						n++;
+					}
+				}
+			}
+			//construccion del mensaje por fecha
+			String[] mensaje = new String[n];
+			for(int conteoFinal = 0; conteoFinal<n && !copiaFechas.isEmpty(); conteoFinal++)
+			{
+				estadisticaActual = arbolBalanceado.get(copiaFechas.pop());
+				//mensaje requerido para infracciones
+				mensaje[conteoFinal]= " Numero de infracciones:"+ estadisticaActual.darnumInfracciones()+"Porcentaje sin accidentes:"+estadisticaActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+estadisticaActual.porPorcentajeAccidentes()+"% Deuda Total:"+estadisticaActual.darTotalDeuda();
+			}
+			return mensaje;
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return null;
 	}
-	
+
 //	public IQueue <VODaylyStatistic> getDailyStatistics () {
 //		IQueue<VODaylyStatistic> lista= new Queue<VODaylyStatistic>();
 //		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsQueue.iterator();

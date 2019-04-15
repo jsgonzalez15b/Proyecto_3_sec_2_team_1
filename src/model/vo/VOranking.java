@@ -64,20 +64,20 @@ public class VOranking implements Comparable<VOranking>
 		int numeroPorcentaje=0;
 		if(pAccidente)
 		{
-			numeroPorcentaje=(int) (numinfracciones*porcenacc); //obtiene el numero de infracciones con accidente para actualizarlo
+			numeroPorcentaje=(int) (numinfracciones*porcenacc/100); //obtiene el numero de infracciones con accidente para actualizarlo
 			numeroPorcentaje++; //actualiza el numero de infracciones
 			numinfracciones++; //aumenta el numero de infracciones
-			porcenacc= numinfracciones/numeroPorcentaje;
-			porcensinacc= 1-porcenacc;
+			porcenacc= 100*numinfracciones/numeroPorcentaje;
+			porcensinacc= 100-porcenacc;
 			violationcode= numinfracciones+"";
 		}
 		else
 		{
-			numeroPorcentaje=(int) (numinfracciones*porcensinacc); //obtiene el numero de infracciones sin accidente para actualizarlo
+			numeroPorcentaje=(int) (numinfracciones*porcensinacc/100); //obtiene el numero de infracciones sin accidente para actualizarlo
 			numeroPorcentaje++; //actualiza el numero de infracciones
 			numinfracciones++; //aumenta el numero de infracciones
-			porcensinacc= numinfracciones/numeroPorcentaje;
-			porcenacc= 1-porcensinacc;
+			porcensinacc= (100*numinfracciones)/(numeroPorcentaje);
+			porcenacc= 100-porcensinacc;
 			violationcode= numinfracciones+"";
 		}
 		
