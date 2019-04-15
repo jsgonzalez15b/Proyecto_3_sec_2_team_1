@@ -101,13 +101,20 @@ public class Controller
 				
 				break;
 			case 5: 
+				view.printMensage("Ingrese el tamaño del ranking");
+				int n=sc.nextInt(); 
+				view.printRanking(darRankingInfracciones(n)); 
 				
 			case 6: 
-				view.printMensage("Ingrese el promedio en formato: val1,val2");
-				String entrada=sc.next();
-				int in=Integer.parseInt(entrada.split(",")[0]);
-				int fin2=Integer.parseInt(entrada.split(",")[1]);
-
+				view.printMensage("Inrgrese la coordenada en x");
+				double x=sc.nextDouble(); 
+				view.printMensage("Ingrese la coordenada en y");
+				double y=sc.nextDouble(); 
+				try {
+				view.printVORanking(ordenarPorlocalizacion(x, y));  
+				}catch(Exception e) {
+					System.out.println("Ha ocurrido un error");
+				}
 				break; 
 			case 7:
 				
@@ -512,9 +519,9 @@ public class Controller
 		return respuesta; 
 	}
 	
-	public VOranking ordenarPorlocalizacion(double[] entrada) throws Exception 
+	public VOranking ordenarPorlocalizacion(double x, double y) throws Exception 
 	{
-		Tupla buscada= new Tupla(entrada[0], entrada[1]); 
+		Tupla buscada= new Tupla(x,y); 
 		// Crear el arbol ordenado por las llaves(Tuplas)
 		RedBlackBST<Tupla,IStack<VOMovingViolations>> arbol= new RedBlackBST<>();
 		ArrayList<Tupla> agregadas= new ArrayList<>(); 

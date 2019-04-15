@@ -3,6 +3,8 @@ package view;
 import model.data_structures.Dupla;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
+import model.data_structures.Iterador;
+import model.data_structures.MaxColaPrioridad;
 import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
@@ -21,8 +23,8 @@ public class MovingViolationsManagerView
 		System.out.println("2. Obtenga las franjas horarias con mayor numero de infracciones");
 		System.out.println("3. Ordenar infracciones por localizacion geografica y buscar infracciones en coordenadas x,y");
 		System.out.println("4. Obtenga infracciones en un rango de fechas");
-		System.out.println("5. ");
-		System.out.println("6. ");
+		System.out.println("5. Obtener Ranking de tipos deinfraccion por número de infracciones");
+		System.out.println("6. Consulta por xCoord y Y Coord");
 		System.out.println("7. ");
 		System.out.println("8. ");
 		System.out.println("9. ");
@@ -136,5 +138,21 @@ public class MovingViolationsManagerView
 	{
 		
 		
+	}
+
+	public void printRanking(MaxColaPrioridad<VOranking> cola) {
+		// TODO Auto-generated method stub
+		Iterador<VOranking> iter=(Iterador<VOranking>) cola.iterator(); 
+		VOranking actual=iter.next(); 
+		int numero=0; 
+		while(iter.hasNext()) {
+			numero++; 
+			System.out.println(numero+". "+ actual.darCode()+","+actual.darnumInfracciones()+","+actual.darPorcentajeSinAccidentes()+" sin accidentes,"+actual.porPorcentajeAccidentes()+"con accidentes,"+ actual.darTotalDeuda()+"por pagar");
+			actual=iter.next(); 
+		}
+	}
+
+	public void printVORanking(VOranking obtenido) {
+		System.out.println("Total de infracciones:"+ obtenido.darnumInfracciones()+",Infreacciones sin accidentes: "+obtenido.darPorcentajeSinAccidentes()+", Porcentaje con infracciones: "+obtenido.porPorcentajeAccidentes()+", Valor total a pagar: "+obtenido.darTotalDeuda()+", location: "+obtenido.darLocation()+",StreetSegId: "+ obtenido.darSreetiId());
 	}
 }
