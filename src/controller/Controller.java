@@ -127,6 +127,9 @@ public class Controller
 					System.out.println("Ha ocurrido un error al ejecutar el método");
 				}
 			case 8: 
+				view.printMensage("Ingrese el AdressId a buscar");
+				int entrada=sc.nextInt(); 
+				view.printVORanking(getInformacionloc(entrada));
 				
 			case 9: 
 				
