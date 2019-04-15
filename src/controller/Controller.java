@@ -101,7 +101,7 @@ public class Controller
 				
 				break;
 			case 5: 
-				view.printMensage("Ingrese el tama�o del ranking");
+				view.printMensage("Ingrese el tamaño del ranking");
 				int n=sc.nextInt(); 
 				view.printRanking(darRankingInfracciones(n)); 
 				
@@ -117,7 +117,15 @@ public class Controller
 				}
 				break; 
 			case 7:
-				
+				view.printMensage("Ingrese el valor inicial:");
+				double inicio=sc.nextDouble(); 
+				view.printMensage("Ingrese el  valor final");
+				double fin2=sc.nextDouble(); 
+				try {
+				view.printArbolRango(arbolRango(inicio, fin2)); 
+				}catch (Exception e) {
+					System.out.println("Ha ocurrido un error al ejecutar el método");
+				}
 			case 8: 
 				
 			case 9: 
@@ -281,7 +289,7 @@ public class Controller
 	 */
 	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
-		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicaciÃ³n geogrÃ¡fica
+		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicaciÃÂ³n geogrÃÂ¡fica
 		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
 		
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
