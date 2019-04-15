@@ -29,7 +29,7 @@ public class MovingViolationsManagerView
 		System.out.println("8. Obtener información por AdressId");
 		System.out.println("9. ");
 		System.out.println("10. ");
-		System.out.println("11. ");
+		System.out.println("11. Gráfica ASCII con la infromación de los tipos de infracciones ");
 		System.out.println("12. ");
 		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
 		
