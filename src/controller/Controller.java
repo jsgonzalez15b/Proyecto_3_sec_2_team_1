@@ -221,8 +221,14 @@ public class Controller
 		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
 		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
 		//location es inicializado con la franja horaria,streetsegid como 0
-		
+
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+		MaxColaPrioridad<VOranking> estadisticasNInfracciones = null; //cola de prioridad con VOranking
+		VOMovingViolations violacionActual=null; //violacion de recorrido
+		VOranking rankingActual=null; //estadistica de recorrido
+		
+		int indice = 0; //indice de franja horaria
+		boolean acc = false; //indicador de accidente
 		
 		//inicializacion de VOranking como bloques de informacion promedio por rango de hora
 		VOranking[] franjas = new VOranking[24];
@@ -234,8 +240,27 @@ public class Controller
 		{
 			franjas[j]= new VOranking("", 0, 1, 1, 0, j+":00:00 - "+j+":59:59",0);
 		}
+		while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por violacion
+		{
+			violacionActual = copiaViolationsStack.pop();
+			indice = Integer.parseInt(violacionActual.getTicketIssueDate().split("T")[1].split(":")[0]);
+			indice = indice==24? 0:indice;//condicion de caso especial de franja horario
+			acc = violacionActual.getAccidentIndicator().equals("Yes");
+			franjas[indice].actualizarInfo(acc, (int)(violacionActual.getFINEAMT()-violacionActual.getTotalPaid()));
+		}
+		for(int k = 0; k<24; k++)
+		{
+			estadisticasNInfracciones.agregar(franjas[k]);
+		}
 		
-		return null;
+		String[] mensaje =new String[nFranjas]; //arreglo de Strings a retornar
+		for(int conteoFinal = 0; conteoFinal<nFranjas; conteoFinal++)
+		{
+			rankingActual = estadisticasNInfracciones.delMax();
+			//mensaje requerido para infracciones
+			mensaje[conteoFinal]= rankingActual.darLocation() + rankingActual.darnumInfracciones()+rankingActual.darPorcentajeSinAccidentes()+rankingActual.porPorcentajeAccidentes()+rankingActual.darTotalDeuda(); 
+		}
+		return mensaje;
 	}
 	
 	/**
