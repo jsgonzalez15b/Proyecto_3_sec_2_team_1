@@ -10,6 +10,7 @@ import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
 
+import model.data_structures.Dupla;
 import model.data_structures.HashTableChaining;
 import model.data_structures.IMaxColaPrioridad;
 import model.data_structures.IQueue;
@@ -89,7 +90,7 @@ public class Controller
 				view.printMensage("Ingrese el par de coordenadas x,y: XXXXXX.X,YYYYYY.Y");
 				String num3=sc.next();
 				HashTableChaining<Tupla,VOMovingViolations> tablaGeografica= ordenarGeograficamente();
-				view.printInfraccionesCoord(tablaGeografica.get(new Tupla(Integer.parseInt(num3.split(",")[0]),Integer.parseInt(num3.split(",")[1]))));
+				view.printMensage(infoInfraccionesGeograficas(tablaGeografica.get(new Tupla(Integer.parseInt(num3.split(",")[0]),Integer.parseInt(num3.split(",")[1])))));
 				
 				break;
 			case 4:
@@ -251,7 +252,7 @@ public class Controller
 			indice = Integer.parseInt(violacionActual.getTicketIssueDate().split("T")[1].split(":")[0]);
 			indice = indice==24? 0:indice;//condicion de caso especial de franja horario
 			acc = violacionActual.getAccidentIndicator().equals("Yes");
-			franjas[indice].actualizarInfo(acc, (int)(violacionActual.getFINEAMT()-violacionActual.getTotalPaid()));
+			franjas[indice].actualizarInfo(acc, (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid()));
 		}
 		for(int k = 0; k<24; k++)
 		{
@@ -288,6 +289,31 @@ public class Controller
 		
 		return tablaGeografica;
 	}
+	
+	/**
+	 * Metodo para obtener informacion principal de infracciones en un par de coordenadas
+	 */
+	public String infoInfraccionesGeograficas(Dupla<Tupla,VOMovingViolations> pDupla)
+	{
+		int tamano = pDupla.chain.darTamano(); //tamano de arreglo dinamico de duplas que corresponden a las mismas coordenadas x,y
+		System.out.println("Las " + tamano +"infracciones tienen la siguiente informacion:");
+		VOMovingViolations violacionActual =null;//violacion de recorrido
+		String mensaje= ""; //mensaje a retornar
+		VOranking rankingActual=null; //estadistica de recorrido
+		boolean acc = false;//indicador de accidente
+		int pDeuda = 0; 
+		
+		for(int i = 0; i<tamano; i++) //actualizacion de toda la informacion
+		{
+			violacionActual = (VOMovingViolations) pDupla.chain.darElemento(i).getValue();
+			acc = violacionActual.getAccidentIndicator().equals("Yes");
+			pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
+			rankingActual.actualizarInfo(acc,pDeuda );
+		}
+		mensaje= " Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+		return mensaje;
+	}
+	
 	
 	/**
 	 * Metodo para obtener las infracciones dentro de un rango determinado

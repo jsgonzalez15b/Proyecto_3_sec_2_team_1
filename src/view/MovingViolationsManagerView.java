@@ -6,6 +6,7 @@ import model.data_structures.IStack;
 import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
+import model.vo.VOranking;
 
 public class MovingViolationsManagerView 
 {
@@ -126,17 +127,6 @@ public class MovingViolationsManagerView
 		}
 		
 	}
-	
-	/**
-	 * Metodo que imprime infracciones en coordenadas X, Y
-	 * @param info Arreglo de VOranking con infracciones
-	 */
-	public void printInfraccionesCoord(Dupla<Tupla,VOMovingViolations> pDupla)
-	{
-		//PENDING
-		
-	}
-
 	
 	/**
 	 * Metodo que imprime N Infracciones en un rango de tiempo determinado
