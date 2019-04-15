@@ -89,4 +89,8 @@ public class RedBlackBST <k extends Comparable<k>,T>{
 			}
 		}
 	}
+	
+		public NodoArbol<k, T> darRaiz(){
+		return raiz; 
+	}
 }
