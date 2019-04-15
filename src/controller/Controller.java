@@ -89,7 +89,7 @@ public class Controller
 				view.printMensage("Se ordenaron las infracciones geograficamente");
 				view.printMensage("Ingrese el par de coordenadas x,y: XXXXXX.X,YYYYYY.Y");
 				String num3=sc.next();
-				HashTableChaining<Tupla,VOMovingViolations> tablaGeografica= ordenarGeograficamente();
+				HashTableChaining<Tupla,VOMovingViolations> tablaGeografica= this.ordenarGeograficamente();
 				view.printMensage(infoInfraccionesGeograficas(tablaGeografica.get(new Tupla(Integer.parseInt(num3.split(",")[0]),Integer.parseInt(num3.split(",")[1])))));
 				
 				break;
@@ -219,7 +219,7 @@ public class Controller
 	}
 	
 	/**
-	 * Metodo para obtener las N franjas horarias con el mayor numero de infracciones
+	 * 1A Metodo para obtener las N franjas horarias con el mayor numero de infracciones
 	 * @param nFranjas numero de franjas a retornar (nFranjas<24)
 	 */
 	public String[] nFranjasHorarias(int nFranjas)
@@ -270,7 +270,7 @@ public class Controller
 	}
 	
 	/**
-	 * Metodo para ordenar infracciones geograficamente, Xcoord es la desigualdad principal y Ycoord la secundaria
+	 * 2A Metodo para ordenar infracciones geograficamente, Xcoord es la desigualdad principal y Ycoord la secundaria
 	 */
 	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
@@ -291,7 +291,7 @@ public class Controller
 	}
 	
 	/**
-	 * Metodo para obtener informacion principal de infracciones en un par de coordenadas
+	 * 2A Metodo para obtener informacion principal de infracciones en un par de coordenadas
 	 */
 	public String infoInfraccionesGeograficas(Dupla<Tupla,VOMovingViolations> pDupla)
 	{
@@ -316,11 +316,16 @@ public class Controller
 	
 	
 	/**
-	 * Metodo para obtener las infracciones dentro de un rango determinado
+	 * 3A Metodo para obtener las infracciones dentro de un rango determinado
 	 */
 	public String[] infraccionesFecha(String pRango)
 	{
-		//A PENDIENTE
+		//Separacion de fechas parametro
+		String fechaInicial = (pRango.split("-"))[0];
+		String fechaFinal = (pRango.split("-"))[1];
+		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+		RedBlackBST<String,VOranking> arbolBalanceado = new RedBlackBST(); //arbol balanceado de estadisticas por fecha
+		
 		return null;
 	}
 	
