@@ -223,7 +223,7 @@ public class Controller
 	 */
 	public String[] nFranjasHorarias(int nFranjas)
 	{
-		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
+		//IDEA: registrar toda la informaciÃ³n promedio de las infracciones en un VOranking por hora y aÃ±adirla a una cola de prioridad
 		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
 		//location es inicializado con la franja horaria, streetsegid como 0
 
@@ -263,7 +263,7 @@ public class Controller
 		{
 			rankingActual = estadisticasNInfracciones.delMax();
 			//mensaje requerido para infracciones
-			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" NÃºmero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		}
 		return mensaje;
 	}
@@ -273,7 +273,7 @@ public class Controller
 	 */
 	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
-		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicación geográfica
+		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicaciÃ³n geogrÃ¡fica
 		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
 		
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
@@ -430,7 +430,7 @@ public class Controller
 		return respuesta; 
 	}
 	
-	public VOranking ordenarPorlocalización(double[] entrada) throws Exception {
+	public VOranking ordenarPorlocalizaciÃ³n(double[] entrada) throws Exception {
 		Tupla buscada= new Tupla(entrada[0], entrada[1]); 
 		// Crear el arbol ordenado por las llaves(Tuplas)
 		RedBlackBST<Tupla,IStack<VOMovingViolations>> arbol= new RedBlackBST<>();
@@ -499,6 +499,51 @@ public class Controller
 		double pPorcensinacc=100-pPorcenacc; 
 		VOranking retornar= new VOranking(null, total, pPorcenacc, pPorcensinacc, deuda, null,streetId ); 
 		return retornar; 
+	}
+	
+		public RedBlackBST<Double, String>  arbolRango (double inicial, double fin) throws Exception{
+		RedBlackBST<Double, String> retornar= new RedBlackBST<>(); 
+		String[] horas= new String[24]; 
+		horas[0]="00";
+		horas[1]="01";
+		horas[2]="02"; 
+		horas[3]="03"; 
+		horas[4]="04"; 
+		horas[5]="05"; 
+		horas[6]="06"; 
+		horas[7]="07"; 
+		horas[8]="08"; 
+		horas[9]="09" ; 
+		horas[10]="10"; 
+		horas[11]="11";
+		horas[12]="12";
+		horas[13]="13";
+		horas[14]="14";
+		horas[15]="15";
+		horas[16]="16";
+		horas[17]="17";
+		horas[18]="18";
+		horas[19]="19";
+		horas[20]="20";
+		horas[21]="21";
+		horas[22]="22";
+		horas[23]="23";
+
+		for (int i=0; i<horas.length; i++) {
+			Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsStack.iterator(); 
+			VOMovingViolations actual=iter.next();
+			double acumulado=0; 
+			while(iter.hasNext()) {
+			if(actual.getTicketIssueDate().split("T")[1].split(":")[0].equals(horas[i])) {
+				acumulado+=actual.getTotalPaid(); 
+			}
+			actual=iter.next(); 
+			}
+			if(acumulado<fin&&acumulado>inicial) {
+				retornar.put(acumulado,horas[i]);
+			}
+		}		
+		return retornar;
 	}
 
 
