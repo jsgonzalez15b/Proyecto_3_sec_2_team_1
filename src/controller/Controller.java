@@ -224,7 +224,7 @@ public class Controller
 	 */
 	public String[] nFranjasHorarias(int nFranjas)
 	{
-		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
+		//IDEA: registrar toda la informacion promedio de las infracciones en un VOranking por hora y anadirla a una cola de prioridad
 		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
 		//location es inicializado con la franja horaria, streetsegid como 0
 
@@ -456,7 +456,8 @@ public class Controller
 		return respuesta; 
 	}
 	
-	public VOranking ordenarPorlocalización(double[] entrada) throws Exception {
+	public VOranking ordenarPorlocalizacion(double[] entrada) throws Exception 
+	{
 		Tupla buscada= new Tupla(entrada[0], entrada[1]); 
 		// Crear el arbol ordenado por las llaves(Tuplas)
 		RedBlackBST<Tupla,IStack<VOMovingViolations>> arbol= new RedBlackBST<>();
