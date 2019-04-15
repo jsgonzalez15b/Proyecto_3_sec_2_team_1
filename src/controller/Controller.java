@@ -264,7 +264,7 @@ public class Controller
 		{
 			rankingActual = estadisticasNInfracciones.delMax();
 			//mensaje requerido para infracciones
-			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" NÃºmero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		}
 		return mensaje;
 	}
@@ -274,7 +274,7 @@ public class Controller
 	 */
 	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
-		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicación geográfica
+		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicaciÃ³n geogrÃ¡fica
 		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
 		
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
@@ -310,7 +310,7 @@ public class Controller
 			pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
 			rankingActual.actualizarInfo(acc,pDeuda );
 		}
-		mensaje= " N�mero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
+		mensaje= " Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		return mensaje;
 	}
 	
@@ -576,6 +576,27 @@ public class Controller
 			}
 		}		
 		return retornar;
+	}
+	
+		public IStack<Dupla<String,Double>> tablaASCII(){
+		IStack<Dupla<String,Double>> retornar= new Stack<>(); 
+		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsStack.iterator(); 
+		VOMovingViolations actual=iter.next(); 
+		ArrayList<String> revisadas= new ArrayList<>(); 
+		while(iter.hasNext()) {
+			double num=0; 
+			if(!revisar(revisadas, actual.getViolationCode())) {
+				Iterador<VOMovingViolations> iter2=(Iterador<VOMovingViolations>) movingViolationsStack.iterator(); 
+				VOMovingViolations actual2=iter.next();
+				if(actual2.getViolationCode().equals(actual.getViolationCode())) {
+					num++; 
+				}
+			}
+			Dupla<String, Double> agregar= new Dupla<>(actual.getViolationCode(),num); 
+			actual=iter.next(); 
+		}
+		
+		return retornar; 
 	}
 
 
