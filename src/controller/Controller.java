@@ -101,6 +101,9 @@ public class Controller
 				
 				break;
 			case 5: 
+				view.printMensage("Ingrese el tamaño del ranking");
+				int n=sc.nextInt(); 
+				view.printRanking(darRankingInfracciones(n)); 
 				
 			case 6: 
 				view.printMensage("Ingrese el promedio en formato: val1,val2");
