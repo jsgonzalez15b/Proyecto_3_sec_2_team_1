@@ -90,27 +90,17 @@ public class HashTableChaining <K extends Comparable<K>,V> implements IHashTable
 		}
 	}
 	/**
-	 * Obtener el valor V asociada a la llave K. V no puede ser null.
+	 * Obtener el la dupla asociada a la llave K. La dupla no puede ser nula.
 	 */
-	public V get(K pLlave)
+	public Dupla<K,V> get(K pLlave)
 	{
 		int indice = hash(pLlave);
-		V elValueBuscado = null;
+		Dupla laDuplabuscada = null;
 		if(hashTable[indice]!=null) //necesariamente esta condicion debe cumplirse
 		{
-			for(int i=0;i<hashTable[indice].chain.darTamano();i++)//busqueda en arreglo de duplas
-			{
-				if(hashTable[indice].chain.darElemento(i)!=null)
-				{
-					if(hashTable[indice].chain.darElemento(i).getKey().compareTo(pLlave)==0)
-					{
-						elValueBuscado = (V) hashTable[indice].chain.darElemento(i).getValue();
-					}
-				}
-			}
-			elValueBuscado = (V) hashTable[indice].getValue();
+			laDuplabuscada=  hashTable[indice];
 		}
-		return elValueBuscado;
+		return laDuplabuscada;
 	}
 	/**
 	 * Borrar la dupla asociada a la llave K. Se obtiene el valor V asociado a la llave K.

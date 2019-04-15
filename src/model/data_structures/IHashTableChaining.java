@@ -22,7 +22,7 @@ public interface IHashTableChaining <K extends Comparable<K>,V>
 	/**
 	 * Obtener el valor V asociada a la llave K. V no puede ser null.
 	*/
-	public V	get(K pLlave);
+	public Dupla<K,V>	get(K pLlave);
 
 	/**
 	 * Borrar la dupla asociada a la llave K. Se obtiene el valor V asociado a la llave K.

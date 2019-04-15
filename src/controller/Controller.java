@@ -10,6 +10,7 @@ import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
 
+import model.data_structures.HashTableChaining;
 import model.data_structures.IMaxColaPrioridad;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
@@ -85,6 +86,10 @@ public class Controller
 			case 3:
 				this.ordenarGeograficamente();
 				view.printMensage("Se ordenaron las infracciones geograficamente");
+				view.printMensage("Ingrese el par de coordenadas x,y: XXXXXX.X,YYYYYY.Y");
+				String num3=sc.next();
+				HashTableChaining<Tupla,VOMovingViolations> tablaGeografica= ordenarGeograficamente();
+				view.printInfraccionesCoord(tablaGeografica.get(new Tupla(Integer.parseInt(num3.split(",")[0]),Integer.parseInt(num3.split(",")[1]))));
 				
 				break;
 			case 4:
@@ -266,9 +271,22 @@ public class Controller
 	/**
 	 * Metodo para ordenar infracciones geograficamente, Xcoord es la desigualdad principal y Ycoord la secundaria
 	 */
-	public void ordenarGeograficamente()
+	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
-		//A PENDIENTE
+		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicación geográfica
+		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
+		
+		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+		HashTableChaining<Tupla,VOMovingViolations> tablaGeografica = new HashTableChaining(); //tabla de ordenamiento hash separate Chaining
+		VOMovingViolations violacionActual=null; //violacion de recorrido
+		
+		while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por violacion
+		{
+			violacionActual=copiaViolationsStack.pop();
+			tablaGeografica.put(new Tupla(violacionActual.getX(),violacionActual.getY()), violacionActual);
+		}
+		
+		return tablaGeografica;
 	}
 	
 	/**

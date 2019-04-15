@@ -1,7 +1,9 @@
 package view;
 
+import model.data_structures.Dupla;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
+import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 
@@ -16,7 +18,7 @@ public class MovingViolationsManagerView
 		System.out.println("---------------------Taller 3----------------------");
 		System.out.println("1. Cree una nueva coleccion de infracciones en movimiento");
 		System.out.println("2. Obtenga las franjas horarias con mayor numero de infracciones");
-		System.out.println("3. Ordenar infracciones por localizacion geografica");
+		System.out.println("3. Ordenar infracciones por localizacion geografica y buscar infracciones en coordenadas x,y");
 		System.out.println("4. Obtenga infracciones en un rango de fechas");
 		System.out.println("5. ");
 		System.out.println("6. ");
@@ -122,6 +124,16 @@ public class MovingViolationsManagerView
 		{
 			System.out.println(info[hello]);
 		}
+		
+	}
+	
+	/**
+	 * Metodo que imprime infracciones en coordenadas X, Y
+	 * @param info Arreglo de VOranking con infracciones
+	 */
+	public void printInfraccionesCoord(Dupla<Tupla,VOMovingViolations> pDupla)
+	{
+		//PENDING
 		
 	}
 
