@@ -25,8 +25,8 @@ public class MovingViolationsManagerView
 		System.out.println("4. Obtenga infracciones en un rango de fechas");
 		System.out.println("5. Obtener Ranking de tipos deinfraccion por número de infracciones");
 		System.out.println("6. Consulta por xCoord y Y Coord");
-		System.out.println("7. ");
-		System.out.println("8. ");
+		System.out.println("7.  Buescar frnajas horarias por rango de deuda acumulada");
+		System.out.println("8. Obtener información por AdressId");
 		System.out.println("9. ");
 		System.out.println("10. ");
 		System.out.println("11. ");
