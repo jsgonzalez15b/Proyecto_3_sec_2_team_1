@@ -69,6 +69,7 @@ public class VOranking implements Comparable<VOranking>
 			numinfracciones++; //aumenta el numero de infracciones
 			porcenacc= numinfracciones/numeroPorcentaje;
 			porcensinacc= 1-porcenacc;
+			violationcode= numinfracciones+"";
 		}
 		else
 		{
@@ -77,6 +78,7 @@ public class VOranking implements Comparable<VOranking>
 			numinfracciones++; //aumenta el numero de infracciones
 			porcensinacc= numinfracciones/numeroPorcentaje;
 			porcenacc= 1-porcensinacc;
+			violationcode= numinfracciones+"";
 		}
 		
 		

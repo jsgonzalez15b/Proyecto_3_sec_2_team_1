@@ -114,9 +114,14 @@ public class MovingViolationsManagerView
 	 * Metodo que imprime N franjas horarias con el mayor numero de infracciones
 	 * @param info Arreglo de Strings que contiene: franja, numero de infracciones, porcentaje sin y con, y valor total
 	 */
-	public void printNFranjas(String[] info, int num)
+	public void printNFranjas(String[] info)
 	{
-		
+		int elementos = info.length;
+		System.out.println("Las " + elementos +"franjas horarias con mayor número de infracciones son:");
+		for(int hello=0;hello<elementos;elementos++)
+		{
+			System.out.println(info[hello]);
+		}
 		
 	}
 

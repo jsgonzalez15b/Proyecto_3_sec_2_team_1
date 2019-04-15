@@ -79,7 +79,7 @@ public class Controller
 				view.printMensage("Ingrese el numero de franjas a obtener");
 				int num2=sc.nextInt();
 				String[] lasFranjas=this.nFranjasHorarias(num2);
-				view.printNFranjas(lasFranjas, num2);
+				view.printNFranjas(lasFranjas);
 				
 				break;
 			case 3:
@@ -220,7 +220,7 @@ public class Controller
 	{
 		//IDEA: registrar toda la información promedio de las infracciones en un VOranking por hora y añadirla a una cola de prioridad
 		//el VOranking es inicializado en su id con el numero de infracciones para utilizar compareTo
-		//location es inicializado con la franja horaria,streetsegid como 0
+		//location es inicializado con la franja horaria, streetsegid como 0
 
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
 		MaxColaPrioridad<VOranking> estadisticasNInfracciones = null; //cola de prioridad con VOranking
@@ -258,7 +258,7 @@ public class Controller
 		{
 			rankingActual = estadisticasNInfracciones.delMax();
 			//mensaje requerido para infracciones
-			mensaje[conteoFinal]= rankingActual.darLocation() + rankingActual.darnumInfracciones()+rankingActual.darPorcentajeSinAccidentes()+rankingActual.porPorcentajeAccidentes()+rankingActual.darTotalDeuda(); 
+			mensaje[conteoFinal]="Franja horaria:"+ rankingActual.darLocation() +" Número de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		}
 		return mensaje;
 	}
