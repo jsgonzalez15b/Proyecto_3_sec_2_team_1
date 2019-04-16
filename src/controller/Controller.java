@@ -143,6 +143,7 @@ public class Controller
 				view.printCoordenadasNesimas(coordenadasNesimas);
 				
 			case 11:
+					view.printACIIViolationcode(tablaASCII());
 				
 			case 12:	
 				fin=true;
