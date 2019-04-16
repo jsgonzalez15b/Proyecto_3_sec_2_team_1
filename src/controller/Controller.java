@@ -299,7 +299,7 @@ public class Controller
 	 */
 	public HashTableChaining<Tupla,VOMovingViolations> ordenarGeograficamente()
 	{
-		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicaciÃÂ³n geogrÃÂ¡fica
+		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicacion geografica
 		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
 		
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
@@ -679,7 +679,71 @@ public class Controller
 	 */
 	public String[] infoInfraccionesHora(String pHoras)
 	{
-		//PENDING
+		//Idea: obtener las estadisticas de las infracciones dentro del rango y ordenar las estadisticas de las infracciones restantes en una Hash Table para su clasificacion
+		try
+		{
+			//Separacion de fechas parametro
+			String horaInicial = (pHoras.split("/"))[0];
+			String horaFinal = (pHoras.split("/"))[1];
+			String horaActual = ""; //fecha de infraccion
+
+			IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
+			VOMovingViolations violacionActual=null; //violacion de recorrido
+			String codigoActual =""; //codigo de la infraccion
+			HashTableChaining<String,VOranking> tablaViolationCode = new HashTableChaining(); //tabla de ordenamiento hash separate Chaining 
+			IStack<String> copiaViolationCode = new Stack<String>(); //copia de violaciones encontradas para retorno de mensajes
+			
+			//id inicializada, ninfracciones inicializadas, porcentaje inicial, porcentaje con inicial, deuda infraccion, no hay location comun, no hay streetsegid comun
+			VOranking estadisticaRango=new VOranking("", 0, 100, 100, 0, "",0); //estadistica de recorrido
+			//VOranking estadisticaFuera=new VOranking("", 0, 100, 100, 0, "",0); //estadistica de recorrido para Duplas en hash table
+			int cantidad=0;
+			
+			boolean acc = false;//indicador de accidente
+			int pDeuda = 0; 
+
+			while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por fechas
+			{
+				violacionActual=copiaViolationsStack.pop();
+				horaActual=(violacionActual.getTicketIssueDate().split("T"))[1].split(".")[0]; //HH:MM:SS
+				if(horaActual.compareTo(horaInicial)>0&&horaActual.compareTo(horaFinal)<0)
+				{
+					acc = violacionActual.getAccidentIndicator().equals("Yes");
+					pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
+					estadisticaRango.actualizarInfo(acc, pDeuda); //se actualiza la informacion de las estadisticas dentro del rango
+				}
+				else
+				{
+					if(tablaViolationCode.get(violacionActual.getViolationCode())!=null)
+					{
+						tablaViolationCode.get(violacionActual.getViolationCode()).getValue().actualizarInfo(acc, pDeuda);
+					}
+					else
+					{
+						tablaViolationCode.put(violacionActual.getViolationCode(), new VOranking(violacionActual.getViolationCode(),1,100,100,0,"",0));
+						copiaViolationCode.push(violacionActual.getViolationCode());
+						cantidad++;
+					}
+								
+					
+				}
+			}
+			//construccion del mensaje por fecha
+			String[] mensaje = new String[cantidad+1];
+			mensaje[0]= " Numero de infracciones dentro de rango:"+ estadisticaRango.darnumInfracciones()+"Porcentaje sin accidentes:"+estadisticaRango.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+estadisticaRango.porPorcentajeAccidentes()+"% Deuda Total:"+estadisticaRango.darTotalDeuda();
+			int conteoXD=1;
+			//informacion de infracciones por fuera de ese rango
+			while(!copiaViolationCode.isEmpty()&&conteoXD<cantidad+1)
+			{
+				mensaje[conteoXD]= "Violation Code por fuera de rango:"+tablaViolationCode.get(copiaViolationCode.pop()).getKey()+"numero de infracciones:"+tablaViolationCode.get(copiaViolationCode.pop()).getValue().darnumInfracciones();
+				conteoXD++;
+			}
+			return mensaje;
+
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return null;
 	}
 	/**
@@ -690,7 +754,7 @@ public class Controller
 		//PENDING
 		return null;
 	}
-	
+
 
 }
 

@@ -5,6 +5,7 @@ import model.data_structures.IQueue;
 import model.data_structures.IStack;
 import model.data_structures.Iterador;
 import model.data_structures.MaxColaPrioridad;
+import model.data_structures.RedBlackBST;
 import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
@@ -136,7 +137,11 @@ public class MovingViolationsManagerView
 	 */
 	public void printInfraccionesRango(String[] pInfracciones)
 	{
-		
+		int elementos = pInfracciones.length;
+		for(int hello=0;hello<elementos;elementos++)
+		{
+			System.out.println(pInfracciones[hello]);
+		}
 		
 	}
 
@@ -171,7 +176,11 @@ public class MovingViolationsManagerView
 	 */
 	public void printInfraccionesHora (String[] pMensaje)
 	{
-		//PENDING
+		int elementos = pMensaje.length;
+		for(int hello=0;hello<elementos;elementos++)
+		{
+			System.out.println(pMensaje[hello]);
+		}
 	}
 	
 	/**
