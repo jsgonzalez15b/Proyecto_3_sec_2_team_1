@@ -189,7 +189,12 @@ public class MovingViolationsManagerView
 	 */
 	public void printCoordenadasNesimas(String[] coordenadasNesimas)
 	{
-		//PENDING
+		int elementos = coordenadasNesimas.length;
+		System.out.println("Las estadisticas para el numero de coordenadas ingresado son:");
+		for(int hello=0;hello<elementos;elementos++)
+		{
+			System.out.println(coordenadasNesimas[hello]);
+		}
 	}
 	
 }

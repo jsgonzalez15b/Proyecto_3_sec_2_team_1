@@ -696,12 +696,12 @@ public class Controller
 			}
 			//construccion del mensaje por fecha
 			String[] mensaje = new String[cantidad+1];
-			mensaje[0]= " Numero de infracciones dentro de rango:"+ estadisticaRango.darnumInfracciones()+"Porcentaje sin accidentes:"+estadisticaRango.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+estadisticaRango.porPorcentajeAccidentes()+"% Deuda Total:"+estadisticaRango.darTotalDeuda();
+			mensaje[0]= " Numero de infracciones dentro de rango:"+ estadisticaRango.darnumInfracciones()+", Porcentaje sin accidentes:"+estadisticaRango.darPorcentajeSinAccidentes()+"%, Porcentaje con accidentes:"+estadisticaRango.porPorcentajeAccidentes()+"%, Deuda Total:"+estadisticaRango.darTotalDeuda();
 			int conteoXD=1;
 			//informacion de infracciones por fuera de ese rango
 			while(!copiaViolationCode.isEmpty()&&conteoXD<cantidad+1)
 			{
-				mensaje[conteoXD]= "Violation Code por fuera de rango:"+tablaViolationCode.get(copiaViolationCode.pop()).getKey()+"numero de infracciones:"+tablaViolationCode.get(copiaViolationCode.pop()).getValue().darnumInfracciones();
+				mensaje[conteoXD]= "Violation Code por fuera de rango:"+tablaViolationCode.get(copiaViolationCode.pop()).getKey()+", numero de infracciones:"+tablaViolationCode.get(copiaViolationCode.pop()).getValue().darnumInfracciones();
 				conteoXD++;
 			}
 			return mensaje;
@@ -718,7 +718,43 @@ public class Controller
 	 */
 	public String[] infoNLocalizaciones(int NLocalizaciones)
 	{
-		//PENDING
+		//idea: recorrer el numero de elementos en el HashTableChaining utilizada en ordenarGeograficamente() con VOranking para actualizar una segunda MaxCola
+		HashTableChaining<Tupla,VOMovingViolations> tablaOrdenadaGeo= ordenarGeograficamente();
+		HashTableChaining<Tupla,VOranking> tablaEstadisticas= new HashTableChaining();
+		Iterador<Tupla> recorrido = tablaOrdenadaGeo.keys(); //obtengo las llaves para realizar
+		
+		VOMovingViolations violacionActual=null; //violacion Actual
+		VOranking rankingActual=null; //estadistica actual
+		Tupla tuplaActual=null; //tupla de recorrido
+		
+		int contador = 0;
+		int infraccion = 0;
+		int pDeuda=0;
+		boolean acc=false;
+		while(recorrido.hasNext() && contador<NLocalizaciones) //paso de informacion a tabla de hash con VOranking
+		{
+			tuplaActual = recorrido.next();
+			violacionActual= tablaOrdenadaGeo.get(tuplaActual).getValue();
+			pDeuda = (int)(violacionActual.getFINEAMT()+violacionActual.getPenalty1()+violacionActual.getPenalty2()-violacionActual.getTotalPaid());
+			acc = violacionActual.getAccidentIndicator().equals("Yes");
+			infraccion= acc? 100:0;
+			if(tablaEstadisticas.get(tuplaActual).getValue()==null)
+			{
+				rankingActual=new VOranking(""+violacionActual.getX()+","+violacionActual.getY(),1,100-infraccion,infraccion,pDeuda,violacionActual.getLocation(),violacionActual.getStreetId());
+				tablaEstadisticas.put(tuplaActual, rankingActual);
+			}
+			else
+			{
+				tablaEstadisticas.get(tuplaActual).getValue().actualizarInfo(acc, pDeuda);
+			}
+			contador++; //registro de iteracion para break de while
+		}
+		
+		String[] mensaje = new String[NLocalizaciones];
+		for(int i=0;i<NLocalizaciones;i++)
+		{
+			mensaje[i]= "En el par de coordenadas:"+rankingActual.darCode()+", Numero de infracciones:"+ rankingActual.darnumInfracciones()+",Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"%, Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"%, Deuda Total:"+rankingActual.darTotalDeuda()+", En location: "+rankingActual.darLocation()+" y StreetSegID:"+rankingActual.darSreetiId(); 
+		}
 		return null;
 	}
 

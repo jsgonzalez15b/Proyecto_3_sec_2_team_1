@@ -6,7 +6,7 @@ public class HashTableChaining <K extends Comparable<K>,V> implements IHashTable
 	/**
 	 * Arreglo que almacena la informacion del Hash implementado para variar tamaño (NO ARREGLO DINAMICO)
 	 */
-	private Dupla[] hashTable;
+	public Dupla[] hashTable;
 
 	/**
 	 * Numero de indices en uso
@@ -22,7 +22,7 @@ public class HashTableChaining <K extends Comparable<K>,V> implements IHashTable
 	public HashTableChaining()
 	{
 		hashTable= new Dupla[10];
-		factorCarga=0.5;
+		factorCarga=0.8;
 	}
 
 	//Métodos
