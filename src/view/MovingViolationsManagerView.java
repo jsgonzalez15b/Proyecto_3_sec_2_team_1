@@ -192,4 +192,29 @@ public class MovingViolationsManagerView
 		//PENDING
 	}
 	
+		public void printACIIViolationcode(IStack<Dupla<String, Double>> cola ){
+		System.out.println("Porcentaje de infracciones por violation code");
+		System.out.println("Codigo|  % de accidentes");
+		Iterador<Dupla<String,Double>> iterador=(Iterador<Dupla<String, Double>>) cola.iterator(); 
+		Dupla<String,Double> actual=iterador.next(); 
+		double total=0; 
+		while(iterador.hasNext()) {
+			total+=actual.getValue(); 
+			actual=iterador.next(); 
+		}
+		Iterador<Dupla<String,Double>> iterador2=(Iterador<Dupla<String, Double>>) cola.iterator(); 
+		Dupla<String,Double> actual2=iterador.next();
+		while (iterador2.hasNext()) {
+			int porcentaje=(int) (actual2.getValue()*100/total); 
+			int equises=(int) porcentaje/3; 
+			String x=""; 
+			for(int i=0;i<equises;i++) {
+				x=x+"*";
+			}
+			System.out.println(actual2.getKey()+"  |  "+x);
+			
+			System.out.println("Cada * corresponde al 3%");	
+		}
+	}
+	
 }
