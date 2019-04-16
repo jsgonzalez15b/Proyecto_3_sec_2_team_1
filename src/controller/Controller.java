@@ -101,7 +101,7 @@ public class Controller
 				
 				break;
 			case 5: 
-				view.printMensage("Ingrese el tamaño del ranking");
+				view.printMensage("Ingrese el tamano del ranking");
 				int n=sc.nextInt(); 
 				view.printRanking(darRankingInfracciones(n)); 
 				
@@ -124,7 +124,7 @@ public class Controller
 				try {
 				view.printArbolRango(arbolRango(inicio, fin2)); 
 				}catch (Exception e) {
-					System.out.println("Ha ocurrido un error al ejecutar el método");
+					System.out.println("Ha ocurrido un error al ejecutar el metodo");
 				}
 			case 8: 
 				view.printMensage("Ingrese el AdressId a buscar");
@@ -404,39 +404,6 @@ public class Controller
 		}
 		return null;
 	}
-
-//	public IQueue <VODaylyStatistic> getDailyStatistics () {
-//		IQueue<VODaylyStatistic> lista= new Queue<VODaylyStatistic>();
-//		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsQueue.iterator();
-//		if(iter.hasNext()) {
-//			VOMovingViolations actual=(VOMovingViolations)iter.next();
-//			String fecha=actual.getTicketIssueDate().split("T")[0];
-//			int numInfracciones=0;
-//			int numAccidentes=0;
-//			double numafintotal=0;
-//			int vez=0; 
-//			while(vez<movingViolationsQueue.size()) {
-//				while(actual.getTicketIssueDate().split("T")[0].equals(fecha)) {
-//					numafintotal+=actual.getFINEAMT();
-//					numInfracciones++;
-//					if(actual.getAccidentIndicator().equals("Yes")) {
-//						numAccidentes++;
-//					}
-//					vez++; 
-//					actual=iter.next();
-//				}
-//				lista.enqueue(new VODaylyStatistic(fecha, numAccidentes, numInfracciones, numafintotal));
-//				numAccidentes=0;
-//				numafintotal=0;
-//				numInfracciones=0;
-//				fecha=actual.getTicketIssueDate().split("T")[0];
-//			}
-//			return lista; 
-//		}
-//		return lista;
-//	}
-
-
 
 	public double[] calcularMiniMax(){
 		double[] coordenadas= new double[4];
