@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import model.vo.VOMovingViolations;
+
 /*
  * Clase de vertice generico, funciona como una tupla con llave id, y valor infoVertex
  */
@@ -22,6 +24,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A>
 	 */
 	private int cargaInfoVertex;
 
+	private IStack<VOMovingViolations> infracciones; 
 	/**
 	 * InfoVertex c(orrespondiente a la latitud y longitud para el taller 8) 
 	 */
@@ -34,9 +37,10 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A>
 	{
 		//el metodo agregar arco tiene un factor de carga maximo del 0.75
 		llaveId = pLlave;
-		infoVertex = new Arco[10000];
+		infoVertex = new Arco[100];
 		vVertex=pValueVertex;
 		cargaInfoVertex = 0;
+		infracciones= new Stack<>();
 	}
 	//Metodos
 	
@@ -137,5 +141,8 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A>
 		int hashCalculado = idVertexFin.hashCode()& 0x7fffffff %infoVertex.length;
 		infoVertex[hashCalculado].setInfoArc(infoArc);;
 		
+	}
+	public void setInfraccion(VOMovingViolations a) {
+		infracciones.push(a);
 	}
 }

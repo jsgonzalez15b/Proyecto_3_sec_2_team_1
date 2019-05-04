@@ -27,6 +27,7 @@ public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler
 	 */
 	private Vertice[] arreglo; 
 	
+	private IStack<Vertice> pila; 
 
 	//Constructor
 	public Grafo()
@@ -34,6 +35,7 @@ public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler
 		nArcos=0;
 		nVertices=0;
 		arreglo= new Vertice[162999]; //implementacion de factor de carga 0.75
+		pila=new Stack<>(); 
 	}
 	
 	//Metodos
@@ -233,7 +235,7 @@ public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler
 		case "node":
 			verticeInfo info= new verticeInfo(Double.parseDouble(attributes.getValue("lat")),Double.parseDouble(attributes.getValue("lon")));
 			vertice=new Vertice<>(Long.parseLong(attributes.getValue("id")), info); 
-			vertices.add(vertice);
+			pila.push(vertice);
 			System.out.println(vertices.size()+"");
 			break; 
 		}
