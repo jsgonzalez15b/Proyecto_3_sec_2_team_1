@@ -5,12 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
-
 import model.data_structures.Dupla;
+import model.data_structures.Grafo;
 import model.data_structures.HashTableChaining;
 import model.data_structures.IMaxColaPrioridad;
 import model.data_structures.IQueue;
@@ -25,6 +24,7 @@ import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 import model.vo.VOranking;
+import model.vo.verticeInfo;
 import sun.awt.image.VolatileSurfaceManager;
 import sun.nio.cs.ext.ISCII91;
 import view.MovingViolationsManagerView;
@@ -40,20 +40,15 @@ public class Controller
 	 * Pila donde se van a cargar los datos de los archivos
 	 */
 	private IStack<VOMovingViolations> movingViolationsStack;
-
-	/**
-	 * Cola de prioridad
-	 */
-	private IMaxColaPrioridad<VOMovingViolations> colaprioridad; 
-
+	private Grafo<Integer, 	verticeInfo, Double> grafo; 
 
 	public Controller()
 	{
 		view = new MovingViolationsManagerView();
+		grafo=new Grafo<>(); 
 
 		//TODO, inicializar la pila y las colas
 		movingViolationsStack = null;
-		colaprioridad=null; 
 	}
 
 	public void run()
@@ -162,7 +157,6 @@ public class Controller
 	{
 		//estructuras de almacenamiento de infracciones
 		movingViolationsStack= new Stack<VOMovingViolations>();
-		colaprioridad=new MaxColaPrioridad<VOMovingViolations>(); 
 		//creacion e inicializacion de arreglo con nombre de los archivos de infracciones por mes 
 		String[] nombresArchivos=new String[12];
 		nombresArchivos[0]="."+File.separator+"data"+File.separator+"Moving_Violations_Issued_in_January_2018_ordered.csv";
@@ -214,7 +208,6 @@ public class Controller
 					
 					//creacion de infraccion en estructura de datos para campos definidos
 					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,cinco,seis,cuatro));
-					colaprioridad.agregar(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez, once,cinco,seis,cuatro));
 					linea=reader.readNext();
 				}
 				pormes[pos]=movingViolationsStack.size()-previo;
@@ -443,7 +436,7 @@ public class Controller
 		MaxColaPrioridad<VOranking> retornar= new MaxColaPrioridad<>(); 
 		ArrayList<String> agregadas= new ArrayList<>();  
 		while(agregadas.size()<N) {
-			Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+			Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
 			VOMovingViolations actual=iter.next(); 
 			int masveces=0; 
 			double accidente=0;
@@ -452,7 +445,7 @@ public class Controller
 			while (iter.hasNext()) { 
 				if(!revisar(agregadas, actual.getViolationCode())) {
 					int veces=0;
-					Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+					Iterador<VOMovingViolations> iter2= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
 					VOMovingViolations actual2=iter2.next();
 					while(iter2.hasNext()) {
 						if(actual2.getViolationCode().equals(actual.getViolationCode())) {
@@ -554,7 +547,7 @@ public class Controller
 	}
 
 	public VOranking getInformacionloc( int pId){
-		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) colaprioridad.iterator();
+		Iterador<VOMovingViolations> iter= (Iterador<VOMovingViolations>) movingViolationsStack.iterator();
 		VOMovingViolations actual=iter.next();
 		int total=0; 
 		int accidentes=0; 
