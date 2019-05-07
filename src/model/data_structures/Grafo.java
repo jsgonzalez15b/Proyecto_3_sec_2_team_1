@@ -89,6 +89,16 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	}
 	
 	/**
+	 * Retorna el objeto de tipo Vertice dado su id
+	 * @param pIdVertex id que identifica el vertice a buscar
+	 */
+	public Vertice findVertice( K pIdVertex) 
+	{
+		int hashCalculado = pIdVertex.hashCode()& 0x7fffffff %arreglo.length; 
+		return arreglo[hashCalculado];
+	}
+	
+	/**
 	 * Actualiza la posicion de todos los elementos del hashTable segun su llave y el nuevo tamano
 	 */
 	public void	reHashGrafo()
@@ -117,6 +127,7 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		{
 			arreglo[hashCalculado1].agregarArco((Comparable) infoArc, idVertexFin); //se agrega el peso del arco y el vertice Fin como conexion al primero
 			arreglo[hashCalculado2].agregarArco((Comparable) infoArc, idVertexIni); //se agrega el peso del arco y el vertice Ini como conexion al segundo
+			nArcos++;
 		}
 		//Caso en el que se crea el vertice pero este caso no aplica creo - igual lo dejo por si acaso
 //		if(arreglo[hashCalculado1]==null || arreglo[hashCalculado2]==null) ASK XD

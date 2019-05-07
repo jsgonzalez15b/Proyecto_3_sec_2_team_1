@@ -35,6 +35,11 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	 */
 	private IStack<VOMovingViolations> infracciones; 
 	
+	/**
+	 * Numero de arcos asociados al vertice
+	 */
+	private int nArcos; 
+	
 	
 	//Constructor
 	/**
@@ -46,6 +51,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 		arcosVertex = new Stack<>();
 		vVertex=pValueVertex;
 		infracciones= new Stack<>();
+		nArcos=0;
 	}
 	
 	
@@ -66,6 +72,14 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	public V darValor()
 	{
 		return vVertex;
+	}
+	
+	/**
+	 * retorna el numero de arcos asociados al vertice
+	 */
+	public int darNArcos()
+	{
+		return nArcos;
 	}
 	
 	/**
@@ -95,6 +109,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	{	
 		Arco elArco = new Arco<K,A>(pPeso,pLlave);
 		arcosVertex.push(elArco);
+		nArcos++;
 	}
 	
 	/**
