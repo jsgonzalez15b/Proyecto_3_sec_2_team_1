@@ -87,6 +87,7 @@ public class Controller
 					grafo.JsonVertices();
 					break; 
 				}catch(Exception e) {
+					e.getStackTrace(); 
 					break; 
 				}
 			case 3: 

@@ -288,15 +288,17 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	}
 	public int darNumArcos() {
 		return nArcos; 
-	}
+		}
 	public void JsonVertices() throws FileNotFoundException {
 		PrintWriter pw= new PrintWriter(new File("."+File.separator+"data"+File.separator+"JsonVertices"));
+		for( int i=0; i<vertices.size(); i++){
+			System.out.println(vertices.get(i).getArcos().get(0));
+		}
 		System.out.println("creo");
 		boolean cerrado=true;
 		String fin="},";
-		pw.println("[zsfdghj k");
+		pw.println("[");
 		for(int i=0; i<vertices.size(); i++) {
-			System.out.println("escribio");
 			Vertice<verticeInfo, Long, Double> actual= vertices.get(i); 
 			pw.println("{");
 			pw.println("\"id\":"+vertices.get(i).darLlave()+",");
@@ -315,7 +317,6 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 				fin="}"; 
 			}
 			pw.println(fin); 
-
 		}
 		pw.println("]");
 		pw.close();
