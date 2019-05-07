@@ -19,21 +19,10 @@ public class MovingViolationsManagerView
 	
 	public void printMenu() {
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
-		System.out.println("---------------------Taller 3----------------------");
-		System.out.println("1. Cree una nueva coleccion de infracciones en movimiento");
-		System.out.println("2. Obtenga las franjas horarias con mayor numero de infracciones");
-		System.out.println("3. Ordenar infracciones por localizacion geografica y buscar infracciones en coordenadas x,y");
-		System.out.println("4. Obtenga infracciones en un rango de fechas");
-		System.out.println("5. Obtener Ranking de tipos deinfraccion por numero de infracciones");
-		System.out.println("6. Consulta por xCoord y Y Coord");
-		System.out.println("7.  Buescar frnajas horarias por rango de deuda acumulada");
-		System.out.println("8. Obtener informacion por AdressId");
-		System.out.println("9. Consulte las infracciones en un rango de horas.");
-		System.out.println("10. Obtener ranking de las N localizaciones coordenadas con mayor cantidad de infracciones.");
-		System.out.println("11. Grafica ASCII con la infromacion de los tipos de infracciones ");
-		System.out.println("12. ");
-		System.out.println("Digite el numero de opcion para ejecutar la tarea, luego presione enter: (Ej., 1):");
-		
+		System.out.println("---------------------Taller 8----------------------");
+		System.out.println("1. Cargar grafo");
+		System.out.println("2. generar Archivo JSON");
+		System.out.println("3. Cargar desde JSON");
 	}
 	
 //	public void printDailyStatistics(IQueue<VODaylyStatistic> dailyStatistics) {

@@ -5,6 +5,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.XMLReader;
+
 import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
@@ -21,6 +34,7 @@ import model.data_structures.Queue;
 import model.data_structures.RedBlackBST;
 import model.data_structures.Stack;
 import model.data_structures.Tupla;
+import model.data_structures.Vertice;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 import model.vo.VOranking;
@@ -41,104 +55,47 @@ public class Controller
 	 */
 	private IStack<VOMovingViolations> movingViolationsStack;
 	private Grafo<Integer, 	verticeInfo, Double> grafo; 
-
+	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices2; 
+	private Vertice<verticeInfo, Long, Double> vertice2; 
 	public Controller()
 	{
 		view = new MovingViolationsManagerView();
 		grafo=new Grafo<>(); 
-
+		vertices2=new ArrayList<>(); 
 		//TODO, inicializar la pila y las colas
 		movingViolationsStack = null;
 	}
 
 	public void run()
-	{
-		Scanner sc = new Scanner(System.in);
-		boolean fin = false;
-
-		while(!fin)
-		{
+	{	
+		Scanner sc= new Scanner(System.in);
+		boolean fin=false; 
+		while(!fin) {
 			view.printMenu();
-
-			int option = sc.nextInt();
-
-			switch(option)
-			{
-			case 1:
-				view.printMensage("Ingrese el numero del semestre que desea cargar");
-				int num=sc.nextInt();
-				int[] pormes=this.loadMovingViolations(num);
-				view.printCargar(pormes, num,calcularMiniMax());				
-
+			int option=sc.nextInt();
+			switch(option) {
+			case 1: 
+				System.out.println("Ingrese 1 si desea cargar el archico: Washington... ");
+				System.out.println("Ingrese 2 si desea cargar el archivo: map.xml");
+				int archivo=sc.nextInt(); 
+				cargarDatos(archivo); 
+				System.out.println(grafo.getVertices().size()+"");
+				System.out.println(grafo.darNumArcos()+"");
 				break;
-
-			case 2:
-				view.printMensage("Ingrese el numero de franjas a obtener");
-				int num2=sc.nextInt();
-				String[] lasFranjas=this.nFranjasHorarias(num2);
-				view.printNFranjas(lasFranjas);
-				
-				break;
-			case 3:
-				this.ordenarGeograficamente();
-				view.printMensage("Se ordenaron las infracciones geograficamente");
-				view.printMensage("Ingrese el par de coordenadas x,y: XXXXXX.X,YYYYYY.Y");
-				String num3=sc.next();
-				HashTableChaining<Tupla,VOMovingViolations> tablaGeografica= this.ordenarGeograficamente();
-				view.printMensage(infoInfraccionesGeograficas(tablaGeografica.get(new Tupla(Integer.parseInt(num3.split(",")[0]),Integer.parseInt(num3.split(",")[1])))));
-				
-				break;
-			case 4:
-				view.printMensage("Ingrese el rango de fechas con el siguiente formato (inicial-final): AAAA-MM-DD/AAAA-MM-DD");
-				String fechaRango = sc.next();
-				String[] infraccionesRango=this.infraccionesFecha(fechaRango);
-				view.printInfraccionesRango(infraccionesRango);
-				
-				break;
-			case 5: 
-				view.printMensage("Ingrese el tamano del ranking");
-				int n=sc.nextInt(); 
-				view.printRanking(darRankingInfracciones(n)); 
-				
-			case 6: 
-				view.printMensage("Inrgrese la coordenada en x");
-				double x=sc.nextDouble(); 
-				view.printMensage("Ingrese la coordenada en y");
-				double y=sc.nextDouble(); 
+			case 2: 
 				try {
-				view.printVORanking(ordenarPorlocalizacion(x, y));  
+					grafo.JsonVertices();
+					break; 
 				}catch(Exception e) {
-					System.out.println("Ha ocurrido un error");
+					break; 
 				}
+			case 3: 
+				cargarDatosJson();
+				for(int i=0; i<vertices2.size(); i++){
+					System.out.println(vertices2.get(i).darLlave()+"");
+				}
+				System.out.println("termino");
 				break; 
-			case 7:
-				view.printMensage("Ingrese el valor inicial:");
-				double inicio=sc.nextDouble(); 
-				view.printMensage("Ingrese el  valor final");
-				double fin2=sc.nextDouble(); 
-				try {
-				view.printArbolRango(arbolRango(inicio, fin2)); 
-				}catch (Exception e) {
-					System.out.println("Ha ocurrido un error al ejecutar el metodo");
-				}
-			case 8: 
-				view.printMensage("Ingrese el AdressId a buscar");
-				int entrada=sc.nextInt(); 
-				view.printVORanking(getInformacionloc(entrada));
-				
-			case 9: 
-				view.printMensage("Ingrese el rango de horas con el siguiente formato (inicial-final): HH:MM:SS/HH:MM:SS");
-				String RangoHora = sc.next();
-				String[] infraccionesRangoHora=this.infraccionesFecha(RangoHora);
-				view.printInfraccionesHora(infraccionesRangoHora);
-			case 10:
-				view.printMensage("Ingrese el numero de localizaciones");
-				int nlugares= sc.nextInt();
-				String[] coordenadasNesimas = infoNLocalizaciones(nlugares);
-				view.printCoordenadasNesimas(coordenadasNesimas);
-				
-			case 11:
-					view.printACIIViolationcode(tablaASCII());
 				
 			case 12:	
 				fin=true;
@@ -752,7 +709,49 @@ public class Controller
 		return null;
 	}
 
+	public int[] cargarDatos(int num) {
+		int[] retornar=new int[2]; 
+		String file=num==1?"Central-WashingtonDC-OpenStreetMap.xml":"exampleMap.xml";
+		try {
+			SAXParserFactory spf= SAXParserFactory.newInstance(); 
+			spf.setNamespaceAware(true); 
+			SAXParser saxParser= spf.newSAXParser(); 
+			XMLReader xmlReader=saxParser.getXMLReader(); 
+			xmlReader.setContentHandler(grafo);
+			xmlReader.parse("."+File.separator+"data"+File.separator+file);
 
+		}catch(Exception e) {
+			System.out.println("Ocurrio un problema leyendo los datos"+e.getStackTrace());
+			e.printStackTrace();
+		}
+
+		return retornar; 
+	}
+	
+	public void cargarDatosJson(){
+		String file="."+File.separator+"data"+File.separator+"JsonVertices.json";  
+		try{
+			JsonParser parser= new JsonParser(); 
+//			Object obj = parser.parse(new FileReader("."+File.separator+"data"+File.separator+file)); 
+			JsonArray arr= (JsonArray)parser.parse(new FileReader(file));
+			System.out.println(file);
+			for (int i=0; i<arr.size()&&arr!=null; i++){
+				JsonObject obj=(JsonObject)arr.get(i); 
+				Long id=Long.parseLong(obj.get("id").getAsString());
+				Double lat=Double.parseDouble(obj.get("lat").getAsString()); 
+				Double log=Double.parseDouble(obj.get("lon").getAsString()); 
+				vertice2=new Vertice<>(id, new verticeInfo(lat, log)); 
+				JsonArray arcos=obj.get("adj").getAsJsonArray(); 
+				for (int j=0; j<arcos.size(); j++){
+					vertice2.agregarArco(0.0, arcos.get(j).getAsLong());
+				}
+				vertices2.add(vertice2); 				
+			}
+						
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 

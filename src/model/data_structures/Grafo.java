@@ -1,5 +1,8 @@
 package model.data_structures;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,6 +14,8 @@ import model.vo.verticeInfo;
 
 public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Comparable<A>> extends DefaultHandler 
 {
+	public static final double radio=6.371;  
+	public static final Integer referencia=1; 
 	//Atributos
 	/**
 	 * Numero de arcos en el grafo
@@ -28,6 +33,9 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	private Vertice[] arreglo; 
 	
 	private IStack<Vertice> pila; 
+
+	private Long anterior;
+	private Long actual;
 
 	//Constructor
 	public Grafo()
@@ -195,14 +203,13 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		return elIterador;
 	}
 	
-	public Vertice[] darArreglo() 
-	{
+	public Vertice[] darArreglo() {
 		return arreglo; 
 	}
 
-	private ArrayList<Vertice<verticeInfo,Long,Integer>> vertices; 
+	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices; 
 
-	private Vertice<verticeInfo, Long, Integer> vertice; 
+	private Vertice<verticeInfo, Long, Double> vertice; 
 
 	@Override
 	public void startDocument() throws SAXException {
@@ -214,10 +221,9 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
-		System.out.println(localName);
 	}
 
-	public ArrayList<Vertice<verticeInfo,Long,Integer>> getVertices(){
+	public ArrayList<Vertice<verticeInfo,Long,Double>> getVertices(){
 		return vertices; 
 	}
 
@@ -225,6 +231,8 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	public void endDocument() throws SAXException {
 		System.out.println(vertices.size()+"");
 	}
+
+
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		switch(qName) {
@@ -239,10 +247,77 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		case "node":
 			verticeInfo info= new verticeInfo(Double.parseDouble(attributes.getValue("lat")),Double.parseDouble(attributes.getValue("lon")));
 			vertice=new Vertice<>(Long.parseLong(attributes.getValue("id")), info); 
-			pila.push(vertice);
-			System.out.println(vertices.size()+"");
+			vertices.add(vertice);
+			break; 
+
+		case "way":
+			anterior=null;  
+			actual=null;  
+			break; 
+		case "nd": 
+			actual=Long.parseLong(attributes.getValue("ref")); 
+			if(anterior!=null) { 
+				Vertice<verticeInfo, Long, Double> uno=getVertice(actual);
+				Vertice<verticeInfo, Long, Double> dos=getVertice(anterior);
+				double lat1=uno.darValor().darLatitud(); 
+				double lat2=dos.darValor().darLatitud();
+				double deltalat=lat2-lat1; 
+				double long1=uno.darValor().darlongitud(); 
+				double long2=dos.darValor().darlongitud(); 
+				double deltalong=long2-long1; 
+				double a = Math.pow(Math.sin(deltalat/2),2)+Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(deltalong/2),2); 
+				double b=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+				double dis=radio*b; 
+				uno.agregarArco(dis, dos.darLlave());
+				dos.agregarArco(dis, uno.darLlave());			
+				nArcos++; 
+			}
+			anterior=actual;
 			break; 
 		}
 	}
-}
+	public Vertice<verticeInfo, Long, Double> getVertice(Long pId) {
+		Vertice<verticeInfo, Long, Double> buscado=null;
+		for(int i=0;i<vertices.size(); i++) {
+			Vertice<verticeInfo, Long, Double> idtemp=vertices.get(i);			
+			if(vertices.get(i).darLlave().equals(pId)) {		
+				buscado=vertices.get(i); 
+			}
+		}
+		return buscado; 
+	}
+	public int darNumArcos() {
+		return nArcos; 
+	}
+	public void JsonVertices() throws FileNotFoundException {
+		PrintWriter pw= new PrintWriter(new File("."+File.separator+"data"+File.separator+"JsonVertices"));
+		System.out.println("creo");
+		boolean cerrado=true;
+		String fin="},";
+		pw.println("[zsfdghj k");
+		for(int i=0; i<vertices.size(); i++) {
+			System.out.println("escribio");
+			Vertice<verticeInfo, Long, Double> actual= vertices.get(i); 
+			pw.println("{");
+			pw.println("\"id\":"+vertices.get(i).darLlave()+",");
+			pw.println("\"lat\":"+vertices.get(i).darValor().darLatitud()+",");
+			pw.println("\"lon\":"+vertices.get(i).darValor().darlongitud()+",");
+			String arcos=""; 
+			for (int j=0;j<actual.getArcos().size();j++) {
+				if(j==actual.getArcos().size()-1) {
+					arcos+=actual.getArcos().get(j).darAdyacente(); 
+				}else {
+					arcos+=actual.getArcos().get(j).darAdyacente()+","; 
+				}
+			}
+			pw.println("\"adj\":["+arcos+"]");
+			if(i==vertices.size()-1) {
+				fin="}"; 
+			}
+			pw.println(fin); 
 
+		}
+		pw.println("]");
+		pw.close();
+	}
+}

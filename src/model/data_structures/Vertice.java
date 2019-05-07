@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import java.util.ArrayList;
+
 import model.vo.VOMovingViolations;
 
 /*
@@ -9,6 +11,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 {
 	//Atributos - Info
 	
+	private ArrayList<Arco> infoVertex;
 	/**
 	 * Id generico del vertice
 	 */
@@ -128,5 +131,8 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	public void setInfraccion(VOMovingViolations a)
 	{
 		infracciones.push(a);
+	}
+	public ArrayList<Arco> getArcos() {
+		return infoVertex; 
 	}
 }
