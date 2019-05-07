@@ -3,7 +3,7 @@ package model.data_structures;
 /*
  * Clase que representa el arco, almacena el id V generico del vertice adyacente y su peso A generico
  */
-public class Arco<K extends Comparable<K>,A>
+public class Arco<K extends Comparable<K>,A extends Comparable<A>>
 {
 
 	//Atributos
@@ -38,7 +38,7 @@ public class Arco<K extends Comparable<K>,A>
 	}
 	
 	/**
-	 * Retorna el Peso del arco
+	 * Retorna el Peso del arco de tipo A
 	 */
 	public A darPeso()
 	{

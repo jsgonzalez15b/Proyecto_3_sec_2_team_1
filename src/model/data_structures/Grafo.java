@@ -9,7 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import model.vo.verticeInfo;
 
-public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler 
+public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Comparable<A>> extends DefaultHandler 
 {
 	//Atributos
 	/**
@@ -107,8 +107,8 @@ public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler
 		//necesariamente ambos vertices deben existir? PREGUNTAR
 		if(arreglo[hashCalculado1]!=null && arreglo[hashCalculado2]!=null)
 		{
-			arreglo[hashCalculado1].agregarArco(infoArc, idVertexFin); //se agrega el peso del arco y el vertice Fin como conexion al primero
-			arreglo[hashCalculado2].agregarArco(infoArc, idVertexIni); //se agrega el peso del arco y el vertice Ini como conexion al segundo
+			arreglo[hashCalculado1].agregarArco((Comparable) infoArc, idVertexFin); //se agrega el peso del arco y el vertice Fin como conexion al primero
+			arreglo[hashCalculado2].agregarArco((Comparable) infoArc, idVertexIni); //se agrega el peso del arco y el vertice Ini como conexion al segundo
 		}
 		//Caso en el que se crea el vertice pero este caso no aplica creo - igual lo dejo por si acaso
 //		if(arreglo[hashCalculado1]==null || arreglo[hashCalculado2]==null) ASK XD
@@ -187,12 +187,16 @@ public class Grafo <K extends Comparable<K>,V,A> extends DefaultHandler
 	/**
 	 * Retorna los identificadores de los vertices adyacentes a idVertex
 	 */
-	public Iterator<K> adj(K idVertex) 
+	public Iterator<Arco> adj(K idVertex) 
 	{
-		return null;
+		int hashCalculado = idVertex.hashCode()& 0x7fffffff %arreglo.length; 
+		Vertice elVerticeBuscado = arreglo[hashCalculado];
+		Iterador<Arco> elIterador = (Iterador<Arco>) elVerticeBuscado.darArcos().iterator();
+		return elIterador;
 	}
 	
-	public Vertice[] darArreglo() {
+	public Vertice[] darArreglo() 
+	{
 		return arreglo; 
 	}
 
