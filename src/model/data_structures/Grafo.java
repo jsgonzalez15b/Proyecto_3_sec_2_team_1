@@ -291,9 +291,6 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		}
 	public void JsonVertices() throws FileNotFoundException {
 		PrintWriter pw= new PrintWriter(new File("."+File.separator+"data"+File.separator+"JsonVertices"));
-		for( int i=0; i<vertices.size(); i++){
-			System.out.println(vertices.get(i).getArcos().get(0));
-		}
 		System.out.println("creo");
 		boolean cerrado=true;
 		String fin="},";

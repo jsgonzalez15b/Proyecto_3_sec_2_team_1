@@ -52,7 +52,7 @@ public class Controller
 
 	/**
 	 * Pila donde se van a cargar los datos de los archivos
-	 */
+	 */ 
 	private IStack<VOMovingViolations> movingViolationsStack;
 	private Grafo<Integer, 	verticeInfo, Double> grafo; 
 	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices2; 
@@ -731,6 +731,7 @@ public class Controller
 	
 	public void cargarDatosJson(){
 		String file="."+File.separator+"data"+File.separator+"JsonVertices.json";  
+		int arcosagregados=0; 
 		try{
 			JsonParser parser= new JsonParser(); 
 //			Object obj = parser.parse(new FileReader("."+File.separator+"data"+File.separator+file)); 
@@ -743,11 +744,13 @@ public class Controller
 				Double log=Double.parseDouble(obj.get("lon").getAsString()); 
 				vertice2=new Vertice<>(id, new verticeInfo(lat, log)); 
 				JsonArray arcos=obj.get("adj").getAsJsonArray(); 
+				arcosagregados+=arcos.size(); 
 				for (int j=0; j<arcos.size(); j++){
 					vertice2.agregarArco(0.0, arcos.get(j).getAsLong());
 				}
 				vertices2.add(vertice2); 				
 			}
+			System.out.println("Se cargaron"+vertices2.size()+" vertices y "+arcosagregados+"arcos");
 						
 		}catch (Exception e){
 			e.printStackTrace();
