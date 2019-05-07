@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.data_structures.Arco;
 import model.data_structures.Grafo;
 import model.vo.*;
 public class GrafoTest 
@@ -67,6 +68,46 @@ public class GrafoTest
     	*/
    	private VOMovingViolations pInfraccion8;
 
+   	//arcos
+   	/**
+	* Elemento 1
+	*/
+	private Arco<Integer,Double> pArco1;
+
+	/**
+	* Elemento 2
+	*/
+	private Arco<Integer,Double> pArco2;
+
+	/**
+	* Elemento 3
+	*/
+	private Arco<Integer,Double> pArco3;
+
+	/**
+	* Elemento 4
+	*/
+	private Arco<Integer,Double> pArco4;
+
+/**
+	* Elemento 5 
+	*/
+	private Arco<Integer,Double> pArco5;
+
+/**
+	* Elemento 6 
+	*/
+	private Arco<Integer,Double> pArco6;
+
+/**
+	* Elemento 7 
+	*/
+	private Arco<Integer,Double> pArco7;
+
+/**
+	* Elemento 8 
+	*/
+	private Arco<Integer,Double> pArco8;
 	
    // -----------------------------------------------------------------
    // Metodos
@@ -88,72 +129,23 @@ public class GrafoTest
 		pInfraccion7 = new VOMovingViolations(7, "Bogota", "2018-02-25", 0, "123006", "RedLight", "0010", 1423.2,842684,50,0,357753,232323,283956);
 		pInfraccion8 = new VOMovingViolations(8, "Bogota", "2018-02-26", 0, "123007", "Glasses", "0083", 1550.2,862486,0,0,456789,268422,452585);
 		
+		
 		//grafo1 para testeo de un solo vertice
-		graph1.addVertex("", pInfraccion1);
+		graph1.addVertex("355657020202,-74043452344", pInfraccion1);
+		
+		//se agregan multiples arcos
 	}
 	
 	@Test
 	public void testUnVertice() 
 	{
-		//Primera  prueba de ordenarQuickSort()
-		ordenarQuickSort(datos);
-		assertEquals( "El primero no es el elemento para el orden esperado", "2018-02-13" , datos[1].getTicketIssueDate() );
-		assertEquals( "El segundo no es el elemento para el orden esperado", "2018-02-15" , datos[2].getTicketIssueDate() );
-		assertEquals( "El tercero no es el elemento para el orden esperado", "2018-02-17" , datos[3].getTicketIssueDate() );
 		
-		//pruebas de ordenarQuickSort y misma fecha para compareTo()
-		assertEquals( "El cuarto no es el esperado, compareTo podría estar mal", 4, datos[4].objectId() );
-		assertEquals( "El quinto no es el esperado para el ordenamiento, compareTo() funciona sin embargo", 5 , datos[5].objectId() );
-		
-		//inicializo el arreglo desordenado nuevamente para probar el metodo nuevamente
-		datos [3] = pInfraccion1;
-		datos [2] = pInfraccion2;
-		datos [4] = pInfraccion5;
-		datos [1] = pInfraccion7;
-		datos [5] = pInfraccion8;
-		
-		//Segunda  prueba de ordenarQuickSort()
-		ordenarQuickSort(datos);
-		assertEquals( "El primero no es el elemento para el orden esperado", "2018-02-13" , datos[1].getTicketIssueDate() );
-		assertEquals( "El segundo no es el elemento para el orden esperado", "2018-02-15" , datos[2].getTicketIssueDate() );
-		assertEquals( "El tercero no es el elemento para el orden esperado", "2018-02-23" , datos[3].getTicketIssueDate() );
-		assertEquals( "El cuarto no es el esperado para el orden esperado", "2018-02-25", datos[4].getTicketIssueDate() );
-		assertEquals( "El quinto no es el esperado para el ordenamiento", "2018-02-26" , datos[5].getTicketIssueDate() );
 	}
 	
 	@Test
 	public void testVarioVertices() 
 	{
-		//Inicializo en los mismo valores del primer intento
-		datos [3] = pInfraccion1;
-		datos [2] = pInfraccion2;
-		datos [4] = pInfraccion3;
-		datos [1] = pInfraccion4;
-		datos [5] = pInfraccion5;
-		//Primera  prueba de ordenarShellSort()
-		ordenarShellSort(datos);
-		assertEquals( "El primero no es el elemento para el orden esperado", "2018-02-13" , datos[1].getTicketIssueDate() );
-		assertEquals( "El segundo no es el elemento para el orden esperado", "2018-02-15" , datos[2].getTicketIssueDate() );
-		assertEquals( "El tercero no es el elemento para el orden esperado", "2018-02-17" , datos[3].getTicketIssueDate() );
 		
-		//pruebas de ordenarQuickSort y misma fecha para compareTo()
-		assertEquals( "El cuarto no es el esperado, compareTo podría estar mal", 4, datos[4].objectId() );
-		assertEquals( "El quinto no es el esperado para el ordenamiento, compareTo() funciona sin embargo", 5 , datos[5].objectId() );
-		
-		//inicializo el arreglo desordenado nuevamente para probar el metodo nuevamente
-		datos [3] = pInfraccion1;
-		datos [2] = pInfraccion4;
-		datos [4] = pInfraccion6;
-		datos [1] = pInfraccion7;
-		datos [5] = pInfraccion8;
-		
-		//Segunda  prueba de ordenarQuickSort()
-		ordenarQuickSort(datos);
-		assertEquals( "El primero no es el elemento para el orden esperado", "2018-02-13" , datos[1].getTicketIssueDate() );
-		assertEquals( "El segundo no es el elemento para el orden esperado", "2018-02-23" , datos[2].getTicketIssueDate() );
-		assertEquals( "El tercero no es el elemento para el orden esperado", "2018-02-23" , datos[3].getTicketIssueDate() );
-		assertEquals( "El cuarto no es el esperado para el orden esperado", "2018-02-25", datos[4].getTicketIssueDate() );
-		assertEquals( "El quinto no es el esperado para el ordenamiento", "2018-02-26" , datos[5].getTicketIssueDate() );
 	}
 	
 }
