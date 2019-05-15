@@ -20,9 +20,7 @@ public class MovingViolationsManagerView
 	public void printMenu() {
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
 		System.out.println("---------------------Taller 8----------------------");
-		System.out.println("1. Cargar grafo");
-		System.out.println("2. generar Archivo JSON");
-		System.out.println("3. Cargar desde JSON");
+		System.out.println("1. Cargar desde JSON");
 	}
 	
 //	public void printDailyStatistics(IQueue<VODaylyStatistic> dailyStatistics) {

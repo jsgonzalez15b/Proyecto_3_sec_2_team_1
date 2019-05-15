@@ -11,7 +11,6 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 {
 	//Atributos - Info
 	
-	private ArrayList<Arco> infoVertex;
 	/**
 	 * Id generico del vertice
 	 */
@@ -27,7 +26,9 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	/**
 	 * Pila de arcos del vertice
 	 */
-	private IStack<Arco> arcosVertex;
+	private IStack<Arco<K,A>> arcosVertex;
+	
+	private IStack<Long> longAdyacentes; 
 
 		
 	/**
@@ -52,6 +53,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 		vVertex=pValueVertex;
 		infracciones= new Stack<>();
 		nArcos=0;
+		longAdyacentes= new Stack<>(); 
 	}
 	
 	
@@ -95,9 +97,9 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	/**
 	 * retorna el arreglo de arcos del vertice (lista de adyacencia)
 	 */
-	public Stack<Arco> darArcos()
+	public Stack<Arco<K,A>> darArcos()
 	{
-		return (Stack<Arco>) arcosVertex;
+		return (Stack<Arco<K,A>>) arcosVertex;
 	}
 	
 	/**
@@ -105,10 +107,9 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	 * @param pPeso Peso del nuevo Arco a crear
 	 * @param pLlave Id del vertice asociado al vertive principal
 	 */
-	public void agregarArco(A pPeso,K pLlave)
+	public void agregarArco(Arco<K,A> agregar)
 	{	
-		Arco elArco = new Arco<K,A>(pPeso,pLlave);
-		arcosVertex.push(elArco);
+		arcosVertex.push(agregar);
 		nArcos++;
 	}
 	
@@ -116,38 +117,43 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	 * dado un id de un vertice conectado retorna la informacion asociada al mismo
 	 * @param pId Id del vertice asociado al arco, el pId DEBE existir, en el caso contrario el metodo retorna nulo
 	 */
-	public Arco darArco(K pId)
-	{
-		Stack<Arco> copiaArcos = (Stack<Arco>) arcosVertex; //copia de arcos para obtener la informacion sin borrarla
-		Arco arcoEncontrado = null; //arco a retornar
-		Arco arcoActual = null;
-		while(!arcosVertex.isEmpty())
-		{
-			arcoActual = copiaArcos.pop();
-			if(arcoActual.darAdyacente().compareTo(pId)==0)
-			{
-				arcoEncontrado = arcoActual;
-				break;
-			}
-		}
-		return (Arco) arcoEncontrado;
-	}
+
 	
 	/**
 	 * Modificar la informacion del arco con el vertice idVertexFin
 	 */
-	public void setInfoArc(K idVertexFin,
-			A infoArc)
-	{
-		Arco arcoModificandose = darArco(idVertexFin);
-		arcoModificandose.setInfoArc(infoArc);
-	}
 	
 	public void setInfraccion(VOMovingViolations a)
 	{
 		infracciones.push(a);
 	}
-	public ArrayList<Arco> getArcos() {
-		return infoVertex; 
+	
+	public Stack<K> darAyacentes(){
+		Stack<K> retornar=new Stack<K>();
+		Iterador<Arco<K,A>> iter= (Iterador<Arco<K, A>>) arcosVertex.iterator(); 
+		Arco<K,A> actual= iter.next(); 
+		while(iter.hasNext()){
+			retornar.push(actual.darAdyacente()); 
+			actual=iter.next(); 
+		}
+		return retornar; 
+	}
+	
+	public Arco<K,A> darArcoPorAdyacente(K adyacente){
+		Iterador<Arco<K,A>> iter= (Iterador<Arco<K, A>>) arcosVertex.iterator(); 
+		Arco<K,A> actual=iter.next(); 
+		while(iter.hasNext()){
+			if(actual.darAdyacente().equals(adyacente)){
+				return actual; 
+			}
+			actual=iter.next() ; 
+		}
+		return null; 
+	}
+	public void agregarLongAdyacente(Long a){
+		longAdyacentes.push(a);
+	}
+	public IStack<Long> darLongAdyacente(){
+		return longAdyacentes;
 	}
 }

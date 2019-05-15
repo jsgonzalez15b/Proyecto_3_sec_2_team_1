@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
@@ -21,6 +22,8 @@ import org.xml.sax.XMLReader;
 import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
+
+import model.data_structures.Arco;
 import model.data_structures.Dupla;
 import model.data_structures.Grafo;
 import model.data_structures.HashTableChaining;
@@ -28,6 +31,7 @@ import model.data_structures.IMaxColaPrioridad;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
 import model.data_structures.Iterador;
+import model.data_structures.LinearProbingHashST;
 import model.data_structures.MaxColaPrioridad;
 import model.data_structures.Nodo;
 import model.data_structures.Queue;
@@ -45,6 +49,7 @@ import view.MovingViolationsManagerView;
 
 public class Controller
 {
+	public static final double radio=6.371;  
 	/**
 	 * View para interaccion con usuario
 	 */
@@ -54,16 +59,14 @@ public class Controller
 	 * Pila donde se van a cargar los datos de los archivos
 	 */ 
 	private IStack<VOMovingViolations> movingViolationsStack;
-	private Grafo<Integer, 	verticeInfo, Double> grafo; 
-	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices2; 
-	private Vertice<verticeInfo, Long, Double> vertice2; 
+	private Grafo<Long, verticeInfo, Double> grafo;  
+	private LinearProbingHashST<Integer, VOMovingViolations> tablainfracciones;
 	public Controller()
 	{
 		view = new MovingViolationsManagerView();
 		grafo=new Grafo<>(); 
-		vertices2=new ArrayList<>(); 
-		//TODO, inicializar la pila y las colas
-		movingViolationsStack = null;
+		movingViolationsStack = new Stack<>(); 
+		tablainfracciones= new LinearProbingHashST<Integer, VOMovingViolations>(); 
 	}
 
 	public void run()
@@ -74,30 +77,11 @@ public class Controller
 			view.printMenu();
 			int option=sc.nextInt();
 			switch(option) {
-			case 1: 
-				System.out.println("Ingrese 1 si desea cargar el archico: Washington... ");
-				System.out.println("Ingrese 2 si desea cargar el archivo: map.xml");
-				int archivo=sc.nextInt(); 
-				cargarDatos(archivo); 
-				System.out.println(grafo.getVertices().size()+"");
-				System.out.println(grafo.darNumArcos()+"");
-				break;
-			case 2: 
-				try {
-					grafo.JsonVertices();
-					break; 
-				}catch(Exception e) {
-					e.getStackTrace(); 
-					break; 
-				}
-			case 3: 
+			case 1:
 				cargarDatosJson();
-				for(int i=0; i<vertices2.size(); i++){
-					System.out.println(vertices2.get(i).darLlave()+"");
-				}
-				System.out.println("termino");
-				break; 
-				
+				System.out.println(grafo.numArcos()+"arcos y " +grafo.numVertices()+"vertices cargados");
+
+				break;				
 			case 12:	
 				fin=true;
 				sc.close();
@@ -111,6 +95,7 @@ public class Controller
 	 * Metodo para carga de archivos segun semestre de seleccion
 	 * @param num Semestre a cargar datos (1 para primer semestre, cualquier otro numero para segundo semestre)
 	 */
+	@SuppressWarnings("deprecation")
 	public int[] loadMovingViolations(int num)
 	{
 		//estructuras de almacenamiento de infracciones
@@ -146,7 +131,7 @@ public class Controller
 		{		
 			try
 			{
-				//Lector de archivos para la posicion i-esima
+				//Lector de archivos para la posicion i-esima 
 				reader=new CSVReader(new FileReader(nombresArchivos[i]));
 				String[] linea=reader.readNext();
 				linea=reader.readNext();
@@ -730,31 +715,54 @@ public class Controller
 	}
 	
 	public void cargarDatosJson(){
-		String file="."+File.separator+"data"+File.separator+"JsonVertices.json";  
+		Arco<Long,Double> agregar; 
+		String file="."+File.separator+"data"+File.separator+"finalGraph.json";  
 		int arcosagregados=0; 
+		int verticesagregados=0; 
 		try{
 			JsonParser parser= new JsonParser(); 
-//			Object obj = parser.parse(new FileReader("."+File.separator+"data"+File.separator+file)); 
 			JsonArray arr= (JsonArray)parser.parse(new FileReader(file));
-			System.out.println(file);
 			for (int i=0; i<arr.size()&&arr!=null; i++){
 				JsonObject obj=(JsonObject)arr.get(i); 
 				Long id=Long.parseLong(obj.get("id").getAsString());
 				Double lat=Double.parseDouble(obj.get("lat").getAsString()); 
 				Double log=Double.parseDouble(obj.get("lon").getAsString()); 
-				vertice2=new Vertice<>(id, new verticeInfo(lat, log)); 
+				grafo.addVertex(id, new Vertice<verticeInfo, Long, Double>(id, new verticeInfo(lat,log)));	
+
 				JsonArray arcos=obj.get("adj").getAsJsonArray(); 
 				arcosagregados+=arcos.size(); 
 				for (int j=0; j<arcos.size(); j++){
-					vertice2.agregarArco(0.0, arcos.get(j).getAsLong());
-				}
-				vertices2.add(vertice2); 				
+					Long llegada= arcos.get(j).getAsLong(); 
+					grafo.getVertice(id).agregarLongAdyacente(llegada);
+				}			
 			}
-			System.out.println("Se cargaron"+vertices2.size()+" vertices y "+arcosagregados+"arcos");
-						
+			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator(); 
+			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			double dis=0; 
+			while(iter.hasNext()){
+				Iterator<Long> iter2=actual.darLongAdyacente().iterator();
+				Long pId=iter2.next(); 
+				while (iter2.hasNext()){
+					Vertice<verticeInfo, Long, Double> actual2=grafo.darTablaVertices().get(pId);
+					dis=calcularHarvesine(actual,actual2); 
+					grafo.addEdge(actual.darLlave(), pId, new Arco<Long, Double>(dis, actual.darLlave(),pId));
+					pId=iter2.next(); 
+				}
+				actual=iter.next(); 
+			}
+			
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public double calcularHarvesine(Vertice<verticeInfo, Long, Double> uno, Vertice<verticeInfo, Long, Double> dos){
+
+		double deltalat=dos.darValor().darLatitud()-uno.darValor().darLatitud();
+		double deltalog=dos.darValor().darlongitud()-uno.darValor().darlongitud(); 
+		double a=Math.pow(Math.sin(deltalat/2), 2)+ Math.cos(uno.darValor().darLatitud())*Math.cos(dos.darValor().darLatitud())*Math.pow(Math.sin(deltalog), 2);
+		double c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
+		return radio*c; 
 	}
 }
 

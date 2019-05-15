@@ -10,7 +10,9 @@ public class Arco<K extends Comparable<K>,A extends Comparable<A>>
 	/**
 	 * Id generico del segundo vertice
 	 */
-	private K llaveId;
+	private K llegada;
+	
+	private K inicio; 
 
 	/**
 	 * Peso del arco
@@ -22,10 +24,11 @@ public class Arco<K extends Comparable<K>,A extends Comparable<A>>
 	 * @param pPeso peso del arco
 	 * @param pLlave llave id del vertice adyacente
 	 */
-	public Arco (A pPeso, K pLlave)
+	public Arco (A pPeso,K pinicio, K pllegada )
 	{
 		//se inicializan los atributos del arco
-		llaveId=pLlave;
+		inicio=pinicio; 
+		llegada=pllegada; 
 		pesoArco=pPeso;
 	}
 	//Metodos
@@ -34,9 +37,12 @@ public class Arco<K extends Comparable<K>,A extends Comparable<A>>
 	 */
 	public K darAdyacente()
 	{
-		return llaveId;
+		return llegada;
 	}
 	
+	public K darInicio(){
+		return inicio; 
+	}
 	/**
 	 * Retorna el Peso del arco de tipo A
 	 */
