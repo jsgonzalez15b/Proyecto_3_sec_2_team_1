@@ -9,14 +9,14 @@ import com.teamdev.jxmaps.swing.MapView;
 import javafx.scene.layout.Border;
 import model.data_structures.Arco;
 import model.data_structures.Grafo;
-import model.data_structures.IStack;
+import model.data_structures.Stack;
 import model.vo.verticeInfo;
 public class Mapa  extends MapView{
 
 	private Map mapa; 
-	private IStack<Arco<Integer, Double>> arcos; 
-	public Mapa (IStack<Arco<Integer, Double>>mostrar){
-		arcos=mostrar; 
+	private Grafo<Long, verticeInfo, Double> grafo;
+	public Mapa (Grafo<Long, verticeInfo, Double> mostrar){
+		grafo=mostrar; 
 		JFrame ventana= new JFrame("Mapa"); 
 		setOnMapReadyHandler(new MapReadyHandler() {
 			
@@ -42,7 +42,38 @@ public class Mapa  extends MapView{
 		ventana.setVisible(true);
 		
 	}
-	public void pintarGrafo(IStack<Arco<Integer, Double>> mostrar){
-		
+	public void pintarGrafo(Grafo<Long, verticeInfo, Double> mostrar){
+		Stack<Arco<Long, Double>> arcos=(Stack<Arco<Long,Double>>) mostrar.darArcosGrafo();
+		int i=0; 
+		while (i<arcos.size()){
+			Arco<Long, Double> arco=arcos.pop(); 
+			verticeInfo primero=grafo.getInfoVertex(arco.darInicio()); 
+			verticeInfo segundo=grafo.getInfoVertex(arco.darAdyacente()); 
+			
+			LatLng[] datos= new LatLng[2]; 
+			datos[0]=new LatLng(primero.darLatitud(), primero.darlongitud()); 
+			datos [1]=new LatLng(segundo.darLatitud(), segundo.darlongitud()); 
+			
+			Circle vertice1=new Circle(mapa); 
+			vertice1.setCenter(datos[0]);
+			vertice1.setRadius(0.4);
+			CircleOptions opciones= new CircleOptions(); 
+			opciones.setFillColor("#FF0000");
+			vertice1.setOptions(opciones);
+			vertice1.setVisible(true);
+			
+			Circle vertice2=new Circle(mapa); 
+			vertice2.setCenter(datos[1]);
+			vertice1.setRadius(0.4);
+			CircleOptions opciones2= new CircleOptions(); 
+			opciones2.setFillColor("#FF0000");
+			vertice2.setOptions(opciones2);
+			vertice2.setVisible(true);
+			
+			Polygon w=new Polygon(mapa); 
+			w.setPath(datos);
+			w.setVisible(true);
+			i++	; 	
+		}
 	}
 }

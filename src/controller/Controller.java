@@ -23,6 +23,7 @@ import com.opencsv.CSVReader;
 import com.sun.corba.se.impl.orbutil.graph.Node;
 import com.sun.org.apache.xerces.internal.util.IntStack;
 
+import mapa.Mapa;
 import model.data_structures.Arco;
 import model.data_structures.Dupla;
 import model.data_structures.Grafo;
@@ -61,6 +62,7 @@ public class Controller
 	private IStack<VOMovingViolations> movingViolationsStack;
 	private Grafo<Long, verticeInfo, Double> grafo;  
 	private LinearProbingHashST<Integer, VOMovingViolations> tablainfracciones;
+	private Mapa mapa; 
 	public Controller()
 	{
 		view = new MovingViolationsManagerView();
@@ -79,7 +81,8 @@ public class Controller
 			switch(option) {
 			case 1:
 				cargarDatosJson();
-				System.out.println(grafo.numArcos()+"arcos y " +grafo.numVertices()+"vertices cargados");
+				System.out.println(grafo.numArcos()+" arcos y " +grafo.numVertices()+" vertices cargados");
+				
 
 				break;				
 			case 12:	
@@ -734,7 +737,11 @@ public class Controller
 				for (int j=0; j<arcos.size(); j++){
 					Long llegada= arcos.get(j).getAsLong(); 
 					grafo.getVertice(id).agregarLongAdyacente(llegada);
-				}			
+				}
+				JsonArray infracciones=obj.get("infractions").getAsJsonArray(); 
+				for(int k=0; k<infracciones.size(); k++){
+					grafo.getVertice(id).setInfraccion(infracciones.get(k).getAsInt());
+				}
 			}
 			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator(); 
 			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
@@ -750,6 +757,7 @@ public class Controller
 				}
 				actual=iter.next(); 
 			}
+			mapa=new Mapa(grafo); 
 			
 		}catch (Exception e){
 			e.printStackTrace();

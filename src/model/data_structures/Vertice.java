@@ -2,6 +2,7 @@ package model.data_structures;
 
 import java.util.ArrayList;
 
+import mapa.Mapa;
 import model.vo.VOMovingViolations;
 
 /*
@@ -34,13 +35,13 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	/**
 	 * Atributo para aproximacion de infracciones a vertices
 	 */
-	private IStack<VOMovingViolations> infracciones; 
+	private IStack<Integer> infracciones; 
 	
 	/**
 	 * Numero de arcos asociados al vertice
 	 */
 	private int nArcos; 
-	
+
 	
 	//Constructor
 	/**
@@ -123,7 +124,7 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	 * Modificar la informacion del arco con el vertice idVertexFin
 	 */
 	
-	public void setInfraccion(VOMovingViolations a)
+	public void setInfraccion(int a)
 	{
 		infracciones.push(a);
 	}
