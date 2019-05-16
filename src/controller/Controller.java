@@ -788,6 +788,34 @@ public class Controller
 		}
 		return retornar; 
 	}
+	public void requerimiento4(){ 
+	Vertice<verticeInfo, Long, Double> inicio= darAleatorio(); 
+	Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
+	
+	}
+	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin){
+		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
+		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>();
+		Queue<Vertice<verticeInfo, Long, Double>> cola= new Queue<>(); 
+		marcados.put(inicio.darLlave(), inicio);
+		cola.enqueue(inicio);
+		while(!cola.isEmpty()){
+			Vertice<verticeInfo, Long, Double> actual=cola.dequeue(); 
+			Stack<Long> adyacentes=actual.darAyacentes(); 
+			Iterator<Long> iter = adyacentes.iterator();
+			Long longactual=iter.next();
+			while(iter.hasNext()){
+				if(marcados.get(longactual)==null){
+					marcados.put(longactual, grafo.getVertice(longactual));
+					cola.enqueue(grafo.getVertice(longactual));
+				}
+			}
+			
+			
+		}
+		return retornar; 
+	}
+	
 }
 
 

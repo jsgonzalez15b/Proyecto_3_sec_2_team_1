@@ -122,7 +122,9 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	{
 		return TablaVertices.get(idVertexIni).darArcoPorAdyacente(idVertexFin).darPeso();
 	}
-	
+	public Arco<K,A> getArc(K idVertexIni, K idVertexFin){
+		return TablaVertices.get(idVertexIni).darArcoPorAdyacente(idVertexFin); 
+	}
 	/**
 	 * Modificar la informacion del arco entre los vertices idVertexIni eidVertexFin
 	 */
@@ -146,6 +148,9 @@ public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	
 	public IStack<Arco<K,A>> darArcosGrafo(){
 		return pilaArcos; 
+	}
+	public void setPilaArcos(Stack<Arco<K,A>> plista){
+		pilaArcos=plista; 
 	}
 
 //	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices; 
