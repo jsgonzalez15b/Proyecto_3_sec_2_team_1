@@ -772,6 +772,22 @@ public class Controller
 		double c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
 		return radio*c; 
 	}
+	
+	public Vertice<verticeInfo, Long, Double> darAleatorio(){
+		Vertice<verticeInfo, Long, Double> retornar=null; 
+		int a; 
+		while(retornar!=null){
+			int contador=0; 
+			a=(int)(Math.random()*grafo.darTablaVertices().size()); 
+			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator(); 
+			retornar=iter.next(); 
+			while(iter.hasNext()&&contador!=a){
+				retornar=iter.next(); 
+				contador++; 
+			}
+		}
+		return retornar; 
+	}
 }
 
 
