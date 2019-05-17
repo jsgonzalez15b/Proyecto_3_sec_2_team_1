@@ -761,18 +761,18 @@ public class Controller
 				}
 			}
 			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator(); 
-			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			Vertice<verticeInfo, Long, Double> actual; 
 			double dis=0; 
 			while(iter.hasNext()){
+				actual=iter.next(); 
 				Iterator<Long> iter2=actual.darLongAdyacente().iterator();
-				Long pId=iter2.next(); 
+				Long pId;
 				while (iter2.hasNext()){
+					pId=iter2.next(); 
 					Vertice<verticeInfo, Long, Double> actual2=grafo.darTablaVertices().get(pId);
 					dis=calcularHarvesine(actual,actual2); 
 					grafo.addEdge(actual.darLlave(), pId, new Arco<Long, Double>(dis, actual.darLlave(),pId));
-					pId=iter2.next(); 
 				}
-				actual=iter.next(); 
 			}
 			mapa=new Mapa(grafo,1,null); 
 
