@@ -60,9 +60,20 @@ public class Controller
 	 * Pila donde se van a cargar los datos de los archivos
 	 */ 
 	private IStack<VOMovingViolations> movingViolationsStack;
-	private Grafo<verticeInfo,Long, Double> grafo;  
+	/**
+	 * Instancia de grafo con la informacion de vertices y arcos entre si
+	 */
+	private Grafo<verticeInfo,Long, Double> grafo;
+	/**
+	 * Tabla de hash de infracciones asociadas a los vertices mas cercanos
+	 */
 	private LinearProbingHashST<Integer, VOMovingViolations> tablainfracciones;
+	/**
+	 * Mapa que permite la ilustracion de vertices y arcos del atributo grafo
+	 */
 	private Mapa mapa; 
+	
+	//CONSTRUCTOR
 	public Controller()
 	{
 		view = new MovingViolationsManagerView();
@@ -84,6 +95,10 @@ public class Controller
 				System.out.println(grafo.numArcos()+" arcos y " +grafo.numVertices()+" vertices cargados");
 				break;
 			case 2:
+				//Stack<Arco<K,A>> pilaArcosMinInfrac = 
+				int n = 2;//PROVISIONAL
+				int d = 10;//PROVISIONAL
+				System.out.println("Con un costo minimo de "+n+" infracciones, y una distancia de "+d+"km, el camino que une los nodos es:");
 				break; 
 			case 3:
 				break; 
