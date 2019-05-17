@@ -897,6 +897,47 @@ public class Controller
 		double c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
 		return radio*c; 
 	}
+	
+	public Stack<Arco<Long, Double>> requerimiento8(){
+		Vertice<verticeInfo, Long, Double> inicio=darAleatorio();
+		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
+		Stack<Arco<Long, Double>> MST=BFS6(inicio, fin);
+		return  MST; 
+	}
+	 
+	public Stack<Arco<Long, Double>> BFS6 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
+		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
+		boolean encontro=false; 
+		LinearProbingHashST<Long, Vertice<verticeInfo, Long, Double>> marcados= new LinearProbingHashST<>(); 
+		Queue<Long> cola= new Queue<>(); 
+		return retornar; 
+		}  
+	
+	public Stack<Arco<Long, Double>> requerimiento9(Stack<Vertice<verticeInfo, Long, Double>> vertices){
+	Stack<Arco<Long, Double>> retornar=new Stack<>(); 
+	Iterator<Vertice<verticeInfo, Long, Double>> iter = vertices.iterator(); 
+	Vertice<verticeInfo, Long, Double> inicio=vertices.darPrimero().darElemento(); 
+	while(iter.hasNext()) {
+		Vertice<verticeInfo,Long, Double>fin=iter.next(); 
+		Stack<Arco<Long,Double>> camino=Djikstra(inicio, fin); 
+		while(!camino.isEmpty()) {
+			retornar.push(camino.pop());
+		}
+		inicio=fin; 
+	}	
+	return retornar; 
+	
+	}
+	
+	public Stack<Arco<Long, Double>> Djikstra(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
+		Stack<Arco<Long, Double>> retornar=new Stack<>();
+		
+		
+		return retornar; 
+	}
+
+	
+	
 
 }
 
