@@ -14,8 +14,8 @@ import model.vo.verticeInfo;
 public class Mapa  extends MapView{
 
 	private Map mapa; 
-	private Grafo<Long, verticeInfo, Double> grafo;
-	public Mapa (Grafo<Long, verticeInfo, Double> mostrar){
+	private Grafo<verticeInfo, Long, Double> grafo;
+	public Mapa (Grafo<verticeInfo, Long, Double> mostrar){
 		grafo=mostrar; 
 		JFrame ventana= new JFrame("Mapa"); 
 		setOnMapReadyHandler(new MapReadyHandler() {
@@ -42,7 +42,7 @@ public class Mapa  extends MapView{
 		ventana.setVisible(true);
 		
 	}
-	public void pintarGrafo(Grafo<Long, verticeInfo, Double> mostrar){
+	public void pintarGrafo(Grafo<verticeInfo,Long, Double> mostrar){
 		Stack<Arco<Long, Double>> arcos=(Stack<Arco<Long,Double>>) mostrar.darArcosGrafo();
 		int i=0; 
 		while (i<arcos.size()){

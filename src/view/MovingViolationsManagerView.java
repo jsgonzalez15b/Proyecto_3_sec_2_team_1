@@ -1,15 +1,19 @@
 package view;
 
+import model.data_structures.Arco;
 import model.data_structures.Dupla;
+import model.data_structures.Grafo;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
 import model.data_structures.Iterador;
 import model.data_structures.MaxColaPrioridad;
 import model.data_structures.RedBlackBST;
+import model.data_structures.Stack;
 import model.data_structures.Tupla;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 import model.vo.VOranking;
+import model.vo.verticeInfo;
 
 public class MovingViolationsManagerView 
 {
@@ -208,5 +212,23 @@ public class MovingViolationsManagerView
 			System.out.println("Cada * corresponde al 3%");	
 		}
 	}
+		
+		public void printreq4(Stack<Arco<Long,Double>>arcos, Grafo<verticeInfo, Long, Double> grafo) {
+			System.out.println("El camino más corto entre los vertices tiene "+(arcos.size()+1)+" vertices");
+			double distancia=0; 
+			Arco<Long, Double> actual=arcos.darPrimero().darElemento(); 
+			verticeInfo info=grafo.getInfoVertex(actual.darInicio()); 
+			System.out.println("vertice0:"+actual.darInicio()+", Ubicación: "+info.darLatitud()+" lat, "+info.darlongitud()+" long");
+			int count=1; 
+			while(!arcos.isEmpty()) {
+				actual=arcos.pop(); 
+				distancia+=actual.darPeso(); 
+				info=grafo.getInfoVertex(actual.darAdyacente()); 
+				System.out.println("vertice"+count+":"+actual.darAdyacente()+", Ubicación: "+info.darLatitud()+" lat, "+info.darlongitud()+" long");
+				count++; 
+			}
+			System.out.println("La distancia en km del camino es de:" + distancia);	
+			
+		}
 	
 }

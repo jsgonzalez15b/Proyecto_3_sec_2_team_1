@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import model.vo.verticeInfo;
 
-public class Grafo <K extends Comparable<K>,V extends Comparable<V>,A extends Comparable<A>> extends DefaultHandler 
+public class Grafo <V extends Comparable<V>,K extends Comparable<K>,A extends Comparable<A>> extends DefaultHandler 
 {
 	public static final double radio=6.371;  
 	public static final Integer referencia=1; 

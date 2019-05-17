@@ -60,7 +60,7 @@ public class Controller
 	 * Pila donde se van a cargar los datos de los archivos
 	 */ 
 	private IStack<VOMovingViolations> movingViolationsStack;
-	private Grafo<Long, verticeInfo, Double> grafo;  
+	private Grafo<verticeInfo,Long, Double> grafo;  
 	private LinearProbingHashST<Integer, VOMovingViolations> tablainfracciones;
 	private Mapa mapa; 
 	public Controller()
@@ -82,9 +82,15 @@ public class Controller
 			case 1:
 				cargarDatosJson();
 				System.out.println(grafo.numArcos()+" arcos y " +grafo.numVertices()+" vertices cargados");
-				
-
-				break;				
+				break;
+			case 2:
+				break; 
+			case 3:
+				break; 
+			case 4: 
+				Stack<Arco<Long, Double>> arcos=requerimiento4();
+				view.printreq4(arcos,grafo); 
+				break; 
 			case 12:	
 				fin=true;
 				sc.close();
@@ -144,14 +150,14 @@ public class Controller
 					//separacion de coordenadas X y Y
 					double cinco=linea[5].equals("")?0:Double.parseDouble(linea[5]);
 					double seis=linea[6].equals("")?0:Double.parseDouble(linea[6]);
-					
+
 					//StreetSegID
 					int cuatro=linea[4].equals("")?0:Integer.parseInt(linea[4]);
 
 					double diez=linea[10].equals("")?0: Double.parseDouble(linea[10]);
 					double once=linea[11].equals("")?0:Double.parseDouble(linea[11]);
-					
-					
+
+
 					//creacion de infraccion en estructura de datos para campos definidos
 					movingViolationsStack.push(new VOMovingViolations(Integer.parseInt(linea[0]), linea[2], linea[13], Double.parseDouble(linea[9]), linea[12], linea[15], linea[14], Double.parseDouble(linea[8]),tres,diez,once,cinco,seis,cuatro));
 					linea=reader.readNext();
@@ -182,7 +188,7 @@ public class Controller
 
 		return pormes; 
 	}
-	
+
 	/**
 	 * 1A Metodo para obtener las N franjas horarias con el mayor numero de infracciones
 	 * @param nFranjas numero de franjas a retornar (nFranjas<24)
@@ -197,10 +203,10 @@ public class Controller
 		MaxColaPrioridad<VOranking> estadisticasNInfracciones = null; //cola de prioridad con VOranking
 		VOMovingViolations violacionActual=null; //violacion de recorrido
 		VOranking rankingActual=null; //estadistica de recorrido
-		
+
 		int indice = 0; //indice de franja horaria
 		boolean acc = false; //indicador de accidente
-		
+
 		//inicializacion de VOranking como bloques de informacion promedio por rango de hora
 		VOranking[] franjas = new VOranking[24];
 		for (int i = 0; i<10;i++)
@@ -223,7 +229,7 @@ public class Controller
 		{
 			estadisticasNInfracciones.agregar(franjas[k]);
 		}
-		
+
 		String[] mensaje =new String[nFranjas]; //arreglo de Strings a retornar
 		for(int conteoFinal = 0; conteoFinal<nFranjas; conteoFinal++)
 		{
@@ -233,7 +239,7 @@ public class Controller
 		}
 		return mensaje;
 	}
-	
+
 	/**
 	 * 2A Metodo para ordenar infracciones geograficamente, Xcoord es la desigualdad principal y Ycoord la secundaria
 	 */
@@ -241,20 +247,20 @@ public class Controller
 	{
 		//idea: Utilizar separate Chaining para entregar todas las infracciones en esa ubicacion geografica
 		// el valor de la dupla con VOMovingViolations y la llave son la tupla "XCoord,YCoord"
-		
+
 		IStack<VOMovingViolations> copiaViolationsStack =  movingViolationsStack; //copia de stack de infracciones
 		HashTableChaining<Tupla,VOMovingViolations> tablaGeografica = new HashTableChaining(); //tabla de ordenamiento hash separate Chaining
 		VOMovingViolations violacionActual=null; //violacion de recorrido
-		
+
 		while(!copiaViolationsStack.isEmpty()) //se vacia la pila copia para actualizar la informacion por violacion
 		{
 			violacionActual=copiaViolationsStack.pop();
 			tablaGeografica.put(new Tupla(violacionActual.getX(),violacionActual.getY()), violacionActual);
 		}
-		
+
 		return tablaGeografica;
 	}
-	
+
 	/**
 	 * 2A Metodo para obtener informacion principal de infracciones en un par de coordenadas
 	 */
@@ -267,7 +273,7 @@ public class Controller
 		VOranking rankingActual=null; //estadistica de recorrido
 		boolean acc = false;//indicador de accidente
 		int pDeuda = 0; 
-		
+
 		for(int i = 0; i<tamano; i++) //actualizacion de toda la informacion
 		{
 			violacionActual = (VOMovingViolations) pDupla.chain.darElemento(i).getValue();
@@ -278,8 +284,8 @@ public class Controller
 		mensaje= " Numero de infracciones:"+ rankingActual.darnumInfracciones()+"Porcentaje sin accidentes:"+rankingActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+rankingActual.porPorcentajeAccidentes()+"% Deuda Total:"+rankingActual.darTotalDeuda(); 
 		return mensaje;
 	}
-	
-	
+
+
 	/**
 	 * 3A Metodo para obtener las infracciones dentro de un rango determinado en un arbol balanceado
 	 * @param pRango formato AAAA-MM-DD/AAAA-MM-DD de fechas iniciales y finales
@@ -301,7 +307,7 @@ public class Controller
 			VOMovingViolations violacionActual=null; //violacion de recorrido
 			VOranking estadisticaActual=null; //estadistica de recorrido
 			int n = 0;// numero de fechas distintivas
-			
+
 			boolean acc = false;//indicador de accidente
 			int pDeuda = 0; 
 
@@ -336,7 +342,7 @@ public class Controller
 				mensaje[conteoFinal]= " Numero de infracciones:"+ estadisticaActual.darnumInfracciones()+"Porcentaje sin accidentes:"+estadisticaActual.darPorcentajeSinAccidentes()+"% Porcentaje con accidentes:"+estadisticaActual.porPorcentajeAccidentes()+"% Deuda Total:"+estadisticaActual.darTotalDeuda();
 			}
 			return mensaje;
-			
+
 		}
 		catch(Exception e)
 		{
@@ -433,7 +439,7 @@ public class Controller
 
 		return respuesta;
 	}
-	
+
 	public boolean revisarTupla(ArrayList<Tupla> arreglo, Tupla num) {
 		boolean respuesta=false; 
 		for (int i=0; i<arreglo.size() &&!respuesta; i++) {
@@ -443,7 +449,7 @@ public class Controller
 		}
 		return respuesta; 
 	}
-	
+
 	public VOranking ordenarPorlocalizacion(double x, double y) throws Exception 
 	{
 		Tupla buscada= new Tupla(x,y); 
@@ -482,12 +488,12 @@ public class Controller
 		}
 		double conacc=(acc*100)/buscar.size(); 
 		double sinacc=100-conacc; 
-				
+
 		return new VOranking(null, buscar.size(),conacc, sinacc,deuda,buscar.darPrimero().darElemento().getLocation(),buscar.darPrimero().darElemento().getStreetId());
 	}
 
-	
-	
+
+
 	public void franjaFechaHora (double valorinicial, double valorfinal) {
 		//PENDIENTE
 	}
@@ -515,8 +521,8 @@ public class Controller
 		VOranking retornar= new VOranking(null, total, pPorcenacc, pPorcensinacc, deuda, null,streetId ); 
 		return retornar; 
 	}
-	
-		public RedBlackBST<Double, String>  arbolRango (double inicial, double fin) throws Exception{
+
+	public RedBlackBST<Double, String>  arbolRango (double inicial, double fin) throws Exception{
 		RedBlackBST<Double, String> retornar= new RedBlackBST<>(); 
 		String[] horas= new String[24]; 
 		horas[0]="00";
@@ -549,10 +555,10 @@ public class Controller
 			VOMovingViolations actual=iter.next();
 			double acumulado=0; 
 			while(iter.hasNext()) {
-			if(actual.getTicketIssueDate().split("T")[1].split(":")[0].equals(horas[i])) {
-				acumulado+=actual.getTotalPaid(); 
-			}
-			actual=iter.next(); 
+				if(actual.getTicketIssueDate().split("T")[1].split(":")[0].equals(horas[i])) {
+					acumulado+=actual.getTotalPaid(); 
+				}
+				actual=iter.next(); 
 			}
 			if(acumulado<fin&&acumulado>inicial) {
 				retornar.put(acumulado,horas[i]);
@@ -560,8 +566,8 @@ public class Controller
 		}		
 		return retornar;
 	}
-	
-		public IStack<Dupla<String,Double>> tablaASCII(){
+
+	public IStack<Dupla<String,Double>> tablaASCII(){
 		IStack<Dupla<String,Double>> retornar= new Stack<>(); 
 		Iterador<VOMovingViolations> iter=(Iterador<VOMovingViolations>) movingViolationsStack.iterator(); 
 		VOMovingViolations actual=iter.next(); 
@@ -578,7 +584,7 @@ public class Controller
 			Dupla<String, Double> agregar= new Dupla<>(actual.getViolationCode(),num); 
 			actual=iter.next(); 
 		}
-		
+
 		return retornar; 
 	}
 	/**
@@ -599,12 +605,12 @@ public class Controller
 			String codigoActual =""; //codigo de la infraccion
 			HashTableChaining<String,VOranking> tablaViolationCode = new HashTableChaining(); //tabla de ordenamiento hash separate Chaining 
 			IStack<String> copiaViolationCode = new Stack<String>(); //copia de violaciones encontradas para retorno de mensajes
-			
+
 			//id inicializada, ninfracciones inicializadas, porcentaje inicial, porcentaje con inicial, deuda infraccion, no hay location comun, no hay streetsegid comun
 			VOranking estadisticaRango=new VOranking("", 0, 100, 100, 0, "",0); //estadistica de recorrido
 			//VOranking estadisticaFuera=new VOranking("", 0, 100, 100, 0, "",0); //estadistica de recorrido para Duplas en hash table
 			int cantidad=0;
-			
+
 			boolean acc = false;//indicador de accidente
 			int pDeuda = 0; 
 
@@ -630,8 +636,8 @@ public class Controller
 						copiaViolationCode.push(violacionActual.getViolationCode());
 						cantidad++;
 					}
-								
-					
+
+
 				}
 			}
 			//construccion del mensaje por fecha
@@ -662,11 +668,11 @@ public class Controller
 		HashTableChaining<Tupla,VOMovingViolations> tablaOrdenadaGeo= ordenarGeograficamente();
 		HashTableChaining<Tupla,VOranking> tablaEstadisticas= new HashTableChaining();
 		Iterador<Tupla> recorrido = tablaOrdenadaGeo.keys(); //obtengo las llaves para realizar
-		
+
 		VOMovingViolations violacionActual=null; //violacion Actual
 		VOranking rankingActual=null; //estadistica actual
 		Tupla tuplaActual=null; //tupla de recorrido
-		
+
 		int contador = 0;
 		int infraccion = 0;
 		int pDeuda=0;
@@ -689,7 +695,7 @@ public class Controller
 			}
 			contador++; //registro de iteracion para break de while
 		}
-		
+
 		String[] mensaje = new String[NLocalizaciones];
 		for(int i=0;i<NLocalizaciones;i++)
 		{
@@ -716,7 +722,7 @@ public class Controller
 
 		return retornar; 
 	}
-	
+
 	public void cargarDatosJson(){
 		Arco<Long,Double> agregar; 
 		String file="."+File.separator+"data"+File.separator+"finalGraph.json";  
@@ -758,12 +764,12 @@ public class Controller
 				actual=iter.next(); 
 			}
 			mapa=new Mapa(grafo); 
-			
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public double calcularHarvesine(Vertice<verticeInfo, Long, Double> uno, Vertice<verticeInfo, Long, Double> dos){
 
 		double deltalat=dos.darValor().darLatitud()-uno.darValor().darLatitud();
@@ -772,7 +778,7 @@ public class Controller
 		double c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
 		return radio*c; 
 	}
-	
+
 	public Vertice<verticeInfo, Long, Double> darAleatorio(){
 		Vertice<verticeInfo, Long, Double> retornar=null; 
 		int a; 
@@ -788,34 +794,54 @@ public class Controller
 		}
 		return retornar; 
 	}
-	public void requerimiento4(){ 
-	Vertice<verticeInfo, Long, Double> inicio= darAleatorio(); 
-	Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
-	
+	public Stack<Arco<Long, Double>> requerimiento4(){ 
+		Vertice<verticeInfo, Long, Double> inicio= darAleatorio(); 
+		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
+		Stack<Arco<Long, Double>> MST=BFS(inicio, fin); 
+		Stack<Arco<Long, Double>> pilafinal= new Stack<>(); 
+		Arco<Long, Double> primero=MST.pop(); 
+		Long inicioanterior=primero.darInicio(); 
+		pilafinal.push(primero);
+		while(!MST.isEmpty()) {
+			Arco<Long, Double> actual=MST.pop(); 
+			if(actual.darAdyacente().equals(inicioanterior)) {
+				pilafinal.push(actual);
+				inicioanterior=actual.darInicio(); 
+			}
+
+		}
+		grafo.setPilaArcos(pilafinal);
+		mapa=new Mapa(grafo);
+		return pilafinal; 
 	}
 	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin){
 		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
+		boolean encontro=false; 
 		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>();
-		Queue<Vertice<verticeInfo, Long, Double>> cola= new Queue<>(); 
+		Queue<Long> cola= new Queue<>(); 
 		marcados.put(inicio.darLlave(), inicio);
-		cola.enqueue(inicio);
-		while(!cola.isEmpty()){
-			Vertice<verticeInfo, Long, Double> actual=cola.dequeue(); 
-			Stack<Long> adyacentes=actual.darAyacentes(); 
-			Iterator<Long> iter = adyacentes.iterator();
+		cola.enqueue(inicio.darLlave());
+		while(!cola.isEmpty()&&!encontro){
+			Long actual=cola.dequeue();  
+			Iterator<Long> iter = grafo.getVertice(actual).darAyacentes().iterator();
 			Long longactual=iter.next();
-			while(iter.hasNext()){
+			while(iter.hasNext()&&!encontro){
 				if(marcados.get(longactual)==null){
 					marcados.put(longactual, grafo.getVertice(longactual));
-					cola.enqueue(grafo.getVertice(longactual));
+					cola.enqueue(longactual);
+					retornar.push(grafo.getArc(actual,longactual));
+					if(longactual.equals(fin.darLlave())) {
+						encontro=true; 
+					}
 				}
+				longactual=iter.next(); 
 			}
-			
-			
+
+
 		}
 		return retornar; 
 	}
-	
+
 }
 
 
