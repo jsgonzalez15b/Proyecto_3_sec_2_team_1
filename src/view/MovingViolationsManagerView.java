@@ -28,6 +28,8 @@ public class MovingViolationsManagerView
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
 		System.out.println("---------------------Taller 8----------------------");
 		System.out.println("1. Cargar desde JSON");
+		System.out.println("4. Retornar camino más corto");
+		System.out.println("5. Retonar aproximación matriz");
 	}
 	
 //	public void printDailyStatistics(IQueue<VODaylyStatistic> dailyStatistics) {
@@ -237,10 +239,10 @@ public class MovingViolationsManagerView
 		public void printreq5(Stack<Vertice<verticeInfo, Long, Double>> retornar) {
 			System.out.println("Se encontraron "+ retornar.size()+" vertices de la aproximación");
 			Iterator<Vertice<verticeInfo, Long, Double>> iter = retornar.iterator(); 
-			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			Vertice<verticeInfo, Long, Double> actual; 
 			while(iter.hasNext()) {
-				System.out.println("Id:"+actual.darLlave()+", Ubicación:"+actual.darValor().darLatitud()+"lat, "+actual.darValor().darlongitud()+"long");
 				actual=iter.next(); 
+				System.out.println("Id:"+actual.darLlave()+", Ubicación:"+actual.darValor().darLatitud()+"lat, "+actual.darValor().darlongitud()+"long");
 			}
 			
 		}

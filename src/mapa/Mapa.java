@@ -84,9 +84,8 @@ public class Mapa  extends MapView{
 			i++	; 	
 		}
 	}
-	private void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices) {
-		int i=0; 
-		while(i<vertices.size()) {
+	private void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices) { 
+		while(!vertices.isEmpty()) {
 			Vertice<verticeInfo, Long, Double> vertice=vertices.pop(); 
 			verticeInfo info=vertice.darValor(); 
 			LatLng[] datos=new LatLng[1]; 

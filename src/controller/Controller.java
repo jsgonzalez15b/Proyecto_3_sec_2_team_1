@@ -797,7 +797,6 @@ public class Controller
 			int contador=0; 
 			a=(int)(Math.random()*grafo.darTablaVertices().size()); 
 			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator(); 
-			retornar=iter.next(); 
 			while(iter.hasNext()&&contador!=a){
 				retornar=iter.next(); 
 				contador++; 
@@ -835,8 +834,9 @@ public class Controller
 		while(!cola.isEmpty()&&!encontro){
 			Long actual=cola.dequeue();  
 			Iterator<Long> iter = grafo.getVertice(actual).darAyacentes().iterator();
-			Long longactual=iter.next();
+			Long longactual;
 			while(iter.hasNext()&&!encontro){
+				longactual=iter.next();
 				if(marcados.get(longactual)==null){
 					marcados.put(longactual, grafo.getVertice(longactual));
 					cola.enqueue(longactual);
@@ -844,8 +844,7 @@ public class Controller
 					if(longactual.equals(fin.darLlave())) {
 						encontro=true; 
 					}
-				}
-				longactual=iter.next(); 
+				} 
 			}
 		}
 		return retornar; 
@@ -869,8 +868,9 @@ public class Controller
 			double minima=1000;
 			double disactual; 
 			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator();
-			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			Vertice<verticeInfo, Long, Double> actual;
 			while(iter.hasNext()) {
+				actual=iter.next(); 
 				double latActual=actual.darValor().darLatitud(); 
 				double longActual=actual.darValor().darlongitud(); 
 				if(latActual>=latMin&&latActual<=latMax&&longActual>=longMin&&longActual<=longMax){
@@ -879,8 +879,7 @@ public class Controller
 						minima=disactual; 
 						mascercano=actual; 
 					}
-				}
-				actual=iter.next();			
+				}		
 			}
 			retornar.push(mascercano);
 		}
