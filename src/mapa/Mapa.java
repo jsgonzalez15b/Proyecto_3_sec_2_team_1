@@ -10,13 +10,17 @@ import javafx.scene.layout.Border;
 import model.data_structures.Arco;
 import model.data_structures.Grafo;
 import model.data_structures.Stack;
+import model.data_structures.Vertice;
 import model.vo.verticeInfo;
+import view.MovingViolationsManagerView;
 public class Mapa  extends MapView{
 
 	private Map mapa; 
 	private Grafo<verticeInfo, Long, Double> grafo;
-	public Mapa (Grafo<verticeInfo, Long, Double> mostrar){
+	private MovingViolationsManagerView view; 
+	public Mapa (Grafo<verticeInfo, Long, Double> mostrar, int num,Stack<Vertice<verticeInfo, Long, Double>> vertices){
 		grafo=mostrar; 
+		view=new MovingViolationsManagerView();
 		JFrame ventana= new JFrame("Mapa"); 
 		setOnMapReadyHandler(new MapReadyHandler() {
 			
@@ -30,8 +34,12 @@ public class Mapa  extends MapView{
 					mapa.setOptions(opciones);
 					mapa.setZoom(10.0);
 					mapa.setCenter(new LatLng(38.8991, -77.0259));
-					
-					pintarGrafo(mostrar); 
+					if(num==1) {
+					pintarGrafo(mostrar);
+					}
+					else {
+						pintarGrafoporVertices(vertices); 
+					}
 				}
 				
 			}
@@ -75,5 +83,22 @@ public class Mapa  extends MapView{
 			w.setVisible(true);
 			i++	; 	
 		}
+	}
+	private void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices) {
+		int i=0; 
+		while(i<vertices.size()) {
+			Vertice<verticeInfo, Long, Double> vertice=vertices.pop(); 
+			verticeInfo info=vertice.darValor(); 
+			LatLng[] datos=new LatLng[1]; 
+			datos[0]=new LatLng(info.darLatitud(), info.darlongitud()); 
+			Circle circulo=new Circle(mapa); 
+			circulo.setCenter(datos[0]);
+			circulo.setRadius(0.4);
+			CircleOptions opciones= new CircleOptions(); 
+			opciones.setFillColor("#FF0000");
+			circulo.setOptions(opciones);
+			circulo.setVisible(true);
+		}
+		
 	}
 }

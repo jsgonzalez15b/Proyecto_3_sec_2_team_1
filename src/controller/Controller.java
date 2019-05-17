@@ -91,6 +91,17 @@ public class Controller
 				Stack<Arco<Long, Double>> arcos=requerimiento4();
 				view.printreq4(arcos,grafo); 
 				break; 
+			case 5: 
+				System.out.println("Ingrese los 6 datos en el siguiente formato: el intervalo de latitud (latMin,latMax,longMin, longMax,numfilas,numcolumnas)");
+				String datos=sc.next(); 
+				double latMin=Double.parseDouble(datos.split(",")[0]);
+				double latMax=Double.parseDouble(datos.split(",")[1]); 
+				double longMin=Double.parseDouble(datos.split(",")[2]); 
+				double longMax=Double.parseDouble(datos.split(",")[3]);
+				int filas=Integer.parseInt(datos.split(",")[4]); 
+				int colum=Integer.parseInt(datos.split(",")[5]);
+				requerimiento5(latMin, latMax, longMin, longMax, filas, colum);
+				break; 
 			case 12:	
 				fin=true;
 				sc.close();
@@ -763,7 +774,7 @@ public class Controller
 				}
 				actual=iter.next(); 
 			}
-			mapa=new Mapa(grafo); 
+			mapa=new Mapa(grafo,1,null); 
 
 		}catch (Exception e){
 			e.printStackTrace();
@@ -811,7 +822,7 @@ public class Controller
 
 		}
 		grafo.setPilaArcos(pilafinal);
-		mapa=new Mapa(grafo);
+		mapa=new Mapa(grafo,1,null);
 		return pilafinal; 
 	}
 	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin){
@@ -836,10 +847,56 @@ public class Controller
 				}
 				longactual=iter.next(); 
 			}
-
-
 		}
 		return retornar; 
+	}
+	
+	public Stack<Vertice<verticeInfo, Long, Double>>  requerimiento5(Double latMin, Double latMax, Double longMin, Double longMax, int m, int n) {
+		double deltalat=Math.abs(latMin)+Math.abs(latMax); 
+		double deltalog=Math.abs(longMin)+Math.abs(longMax);
+		double avancelat=deltalat/(m-1); 
+		double avancelong=deltalog/(n-1); 
+		Stack<verticeInfo> pila= new Stack<>(); 
+		for(double i=latMin; i<=latMax; i+=avancelat) {
+			for(double j=longMin; j<=longMax; j+=avancelong) {
+				pila.push(new verticeInfo(i,j));
+			}
+		}
+		Stack<Vertice<verticeInfo, Long, Double>> retornar= new Stack<>(); 
+		while(!pila.isEmpty()) {
+			verticeInfo info=pila.pop(); 
+			Vertice<verticeInfo,Long, Double> mascercano=null; 
+			double minima=1000;
+			double disactual; 
+			Iterator<Vertice<verticeInfo, Long, Double>> iter = grafo.darTablaVertices().keys().iterator();
+			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			while(iter.hasNext()) {
+				double latActual=actual.darValor().darLatitud(); 
+				double longActual=actual.darValor().darlongitud(); 
+				if(latActual>=latMin&&latActual<=latMax&&longActual>=longMin&&longActual<=longMax){
+					disactual=HarvesianaInfo(info, actual.darValor()); 
+					if(disactual<minima) {
+						minima=disactual; 
+						mascercano=actual; 
+					}
+				}
+				actual=iter.next();			
+			}
+			retornar.push(mascercano);
+		}
+		view.printreq5(retornar); 
+		mapa= new Mapa(grafo, 2, retornar); 
+		return retornar; 
+		
+	}
+	
+	public double HarvesianaInfo(verticeInfo uno, verticeInfo dos){
+
+		double deltalat=dos.darLatitud()-uno.darLatitud();
+		double deltalog=dos.darlongitud()-uno.darlongitud(); 
+		double a=Math.pow(Math.sin(deltalat/2), 2)+ Math.cos(uno.darLatitud())*Math.cos(dos.darLatitud())*Math.pow(Math.sin(deltalog), 2);
+		double c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
+		return radio*c; 
 	}
 
 }

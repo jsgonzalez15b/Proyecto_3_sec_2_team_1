@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Iterator;
+
 import model.data_structures.Arco;
 import model.data_structures.Dupla;
 import model.data_structures.Grafo;
@@ -10,6 +12,7 @@ import model.data_structures.MaxColaPrioridad;
 import model.data_structures.RedBlackBST;
 import model.data_structures.Stack;
 import model.data_structures.Tupla;
+import model.data_structures.Vertice;
 import model.vo.VODaylyStatistic;
 import model.vo.VOMovingViolations;
 import model.vo.VOranking;
@@ -228,6 +231,17 @@ public class MovingViolationsManagerView
 				count++; 
 			}
 			System.out.println("La distancia en km del camino es de:" + distancia);	
+			
+		}
+
+		public void printreq5(Stack<Vertice<verticeInfo, Long, Double>> retornar) {
+			System.out.println("Se encontraron "+ retornar.size()+" vertices de la aproximación");
+			Iterator<Vertice<verticeInfo, Long, Double>> iter = retornar.iterator(); 
+			Vertice<verticeInfo, Long, Double> actual=iter.next(); 
+			while(iter.hasNext()) {
+				System.out.println("Id:"+actual.darLlave()+", Ubicación:"+actual.darValor().darLatitud()+"lat, "+actual.darValor().darlongitud()+"long");
+				actual=iter.next(); 
+			}
 			
 		}
 	
