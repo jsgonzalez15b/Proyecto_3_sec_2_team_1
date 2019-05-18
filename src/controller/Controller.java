@@ -848,7 +848,7 @@ public class Controller
 		cola.enqueue(inicio.darLlave());
 		while(!cola.isEmpty()&&!encontro){
 			Long actual=cola.dequeue();  
-			Iterator<Long> iter = grafo.getVertice(actual).darAdyacentes().iterator();
+			Iterator<Long> iter = grafo.getVertice(actual).darAyacentes().iterator();
 			Long longactual;
 			while(iter.hasNext()&&!encontro){
 				longactual=iter.next();
