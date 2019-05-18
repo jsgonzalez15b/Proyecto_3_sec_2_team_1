@@ -10,40 +10,39 @@ import model.vo.VOMovingViolations;
  */
 public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends Comparable<A>>
 {
-	//Atributos - Info
-	
+	//ATRIBUTOS - Info
 	/**
 	 * Id generico del vertice
 	 */
-	private K llaveId;
-	
+	private K llaveId;	
 	/**
 	 * InfoVertex c(orrespondiente a la latitud y longitud para el taller 8) 
 	 */
-	private V vVertex;
-
-	//Atributos - Arcos
+	private V vVertex;	
+	/**
+	 * Atributo para aproximacion de infracciones a vertices
+	 */
+	private IStack<Integer> infracciones; 	
+	/**
+	 * Numero de infracciones aproximadas a este vertice
+	 */
+	private int nInfracciones; 
 	
+	//Atributos - Arcos
 	/**
 	 * Pila de arcos del vertice
 	 */
 	private IStack<Arco<K,A>> arcosVertex;
-	
-	private IStack<Long> longAdyacentes; 
-
-		
-	/**
-	 * Atributo para aproximacion de infracciones a vertices
-	 */
-	private IStack<Integer> infracciones; 
-	
 	/**
 	 * Numero de arcos asociados al vertice
 	 */
 	private int nArcos; 
-
+	/**
+	 * pila de llaves tipo long de vertices adyacentes 
+	 */
+	private IStack<Long> longAdyacentes; 
 	
-	//Constructor
+	//CONSTRUCTOR
 	/**
 	 * @param pLlave llave id del nuevo vertice
 	 */
@@ -55,11 +54,11 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 		infracciones= new Stack<>();
 		nArcos=0;
 		longAdyacentes= new Stack<>(); 
+		nInfracciones=0;
 	}
 	
 	
-	//Metodos
-	
+	//METODOS
 	//Atributos del vertice
 	/**
 	 * retorna la llave del vertice
@@ -68,7 +67,6 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	{
 		return llaveId;
 	}
-	
 	/**
 	 * retorna el valor asociado al vertice
 	 */
@@ -76,7 +74,6 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	{
 		return vVertex;
 	}
-	
 	/**
 	 * retorna el numero de arcos asociados al vertice
 	 */
@@ -84,7 +81,13 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	{
 		return nArcos;
 	}
-	
+	/**
+	 * retorna el numero de infracciones aproximadas al vertice
+	 */
+	public int darNInfracciones()
+	{
+		return nInfracciones;
+	}
 	/**
 	 * Modifica la informacion del vertice 
 	 * @param infoVertex nueva informacion del vertice
@@ -93,16 +96,15 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 	{
 		vVertex=pInfoVertex;
 	}
-	
+
 	//arcos y operaciones sobre arcos
 	/**
-	 * retorna el arreglo de arcos del vertice (lista de adyacencia)
+	 * retorna la pila de arcos del vertice 
 	 */
 	public Stack<Arco<K,A>> darArcos()
 	{
 		return (Stack<Arco<K,A>>) arcosVertex;
 	}
-	
 	/**
 	 * agrega un arco a la pila de arcos
 	 * @param pPeso Peso del nuevo Arco a crear
@@ -113,48 +115,57 @@ public class Vertice <V extends Comparable<V>,K extends Comparable<K>,A extends 
 		arcosVertex.push(agregar);
 		nArcos++;
 	}
-	
 	/**
-	 * dado un id de un vertice conectado retorna la informacion asociada al mismo
-	 * @param pId Id del vertice asociado al arco, el pId DEBE existir, en el caso contrario el metodo retorna nulo
+	 * Agregar un identificador de infraccion a la pila de integers de infracciones
 	 */
-
-	
-	/**
-	 * Modificar la informacion del arco con el vertice idVertexFin
-	 */
-	
 	public void setInfraccion(int a)
 	{
 		infracciones.push(a);
+		nInfracciones++;
 	}
-	
-	public Stack<K> darAyacentes(){
+	/**
+	 * Retorna una pila de llaves genericas K de los vertices adyacentes al vertice
+	 */
+	public Stack<K> darAdyacentes()
+	{
 		Stack<K> retornar=new Stack<K>();
 		Iterador<Arco<K,A>> iter= (Iterador<Arco<K, A>>) arcosVertex.iterator(); 
 		Arco<K,A> actual= iter.next(); 
-		while(iter.hasNext()){
+		while(iter.hasNext())
+		{
 			retornar.push(actual.darAdyacente()); 
 			actual=iter.next(); 
 		}
 		return retornar; 
 	}
-	
-	public Arco<K,A> darArcoPorAdyacente(K adyacente){
+	/**
+	 * Retorna el arco asociado al vertice con llave recibida por parametro
+	 * @param adyacente llave del vertice adyacente
+	 */
+	public Arco<K,A> darArcoPorAdyacente(K adyacente)
+	{
 		Iterador<Arco<K,A>> iter= (Iterador<Arco<K, A>>) arcosVertex.iterator(); 
 		Arco<K,A> actual=iter.next(); 
-		while(iter.hasNext()){
-			if(actual.darAdyacente().equals(adyacente)){
+		while(iter.hasNext())
+		{
+			if(actual.darAdyacente().equals(adyacente))
+			{
 				return actual; 
 			}
 			actual=iter.next() ; 
 		}
 		return null; 
 	}
-	public void agregarLongAdyacente(Long a){
+	public void agregarLongAdyacente(Long a)
+	{
 		longAdyacentes.push(a);
 	}
-	public IStack<Long> darLongAdyacente(){
+	/**
+	 * Retorna el arco asociado al vertice con llave recibida por parametro
+	 * @return longAdyacentes lista de llaves de vertices adyacentes
+	 */
+	public IStack<Long> darLongAdyacente()
+	{
 		return longAdyacentes;
 	}
 }

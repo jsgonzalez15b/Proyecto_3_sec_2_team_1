@@ -1,6 +1,7 @@
 package model.vo; 
 
-public class verticeInfo implements Comparable<verticeInfo> {
+public class verticeInfo implements Comparable<verticeInfo>
+{
 
 	double latitud; 
 	double longitud; 

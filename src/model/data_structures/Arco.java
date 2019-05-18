@@ -8,12 +8,13 @@ public class Arco<K extends Comparable<K>,A extends Comparable<A>>
 
 	//Atributos
 	/**
+	 * Id generico del primer vertice
+	 */
+	private K inicio; 
+	/**
 	 * Id generico del segundo vertice
 	 */
 	private K llegada;
-	
-	private K inicio; 
-
 	/**
 	 * Peso del arco
 	 */
