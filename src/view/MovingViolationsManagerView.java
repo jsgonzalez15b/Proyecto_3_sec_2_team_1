@@ -231,16 +231,16 @@ public class MovingViolationsManagerView
 			Arco<Long, Double> actual=arcos.darPrimero().darElemento(); 
 			verticeInfo info=grafo.getInfoVertex(actual.darInicio()); 
 			System.out.println("vertice0:"+actual.darInicio()+", Ubicación: "+info.darLatitud()+" lat, "+info.darlongitud()+" long");
+			Iterator<Arco<Long, Double>> iter = arcos.iterator(); 
 			int count=1; 
-			while(!arcos.isEmpty()) {
-				actual=arcos.pop(); 
+			while(iter.hasNext()) {
+				actual=iter.next(); 
 				distancia+=actual.darPeso(); 
 				info=grafo.getInfoVertex(actual.darAdyacente()); 
 				System.out.println("vertice"+count+":"+actual.darAdyacente()+", Ubicación: "+info.darLatitud()+" lat, "+info.darlongitud()+" long");
-				count++; 
+				count++;
 			}
 			System.out.println("La distancia en km del camino es de:" + distancia);	
-			
 		}
 
 		public void printreq5(Stack<Vertice<verticeInfo, Long, Double>> retornar) {

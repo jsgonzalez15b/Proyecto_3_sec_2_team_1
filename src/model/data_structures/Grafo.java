@@ -153,6 +153,10 @@ public class Grafo <V extends Comparable<V>,K extends Comparable<K>,A extends Co
 	{
 		pilaArcos=plista; 
 	}
+	
+	public void setListaVertices(LinearProbingHashST<K,Vertice<V,K,A>> a){
+		TablaVertices=a; 
+	}
 	//	public ArrayList<Vertice<verticeInfo,Long,Double>> vertices; 
 	//
 	//	private Vertice<verticeInfo, Long, Double> vertice; 

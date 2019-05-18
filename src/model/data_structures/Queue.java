@@ -57,27 +57,13 @@ public class Queue<T> implements IQueue<T>
 	public void enqueue(T pElemento)
 	{
 		
-		Nodo<T> nuevoUltimo= new Nodo<T>(pElemento);
-		if(primero!=null && ultimo==null)
-		{
-			ultimo= nuevoUltimo;
-			primero.setAnterior(nuevoUltimo);
-			primero.setSiguiente(nuevoUltimo);
-			ultimo.setSiguiente(primero); //el nodo se asocia a Ã©l mismo para poder operarse
-			ultimo.setAnterior(primero);
-		}
-		else if(primero!=null && ultimo!=null)
-		{	
-			nuevoUltimo.setSiguiente(primero); //el siguiente nodo al nuevo Ãºltimo es el primero.
-			nuevoUltimo.setAnterior(ultimo); //el nodo anterior al nuevo Ãºltimo es el Ãºltimo.
-			ultimo.setSiguiente(nuevoUltimo); //se actualiza el siguiente del antiguo Ãºltimo.
-			primero.setAnterior(nuevoUltimo); //se actualiza el nodo anterior del primer nodo.
-			ultimo = nuevoUltimo; //se actualiza el Ãºltimo nodo. 
-		}
-
-		else
-		{
-			primero = nuevoUltimo;			
+		Nodo<T> nuevoultimo= new Nodo<T>(pElemento);
+		if(primero==null){
+			primero=nuevoultimo; 
+			ultimo=nuevoultimo; 
+		}else{
+			ultimo.setSiguiente(nuevoultimo);
+			ultimo=nuevoultimo; 
 		}
 		cantidad++;
 	}
@@ -88,31 +74,16 @@ public class Queue<T> implements IQueue<T>
 	 */
 	public T dequeue()
 	{
-
-		if(primero!=null) //caso cantidad>1
-		{	
-			if(primero!=ultimo)
-			{
-				T elElemento = primero.darElemento(); //se obtiene el elemento del primer nodo.
-				ultimo.setSiguiente(primero.darSiguiente()); //se elimina la relaciÃ³n del Ãºltimo con el antiguo primero.
-				primero.darSiguiente().setAnterior(ultimo); //se actualiza el nodo anterior del segundo nodo
-				primero= primero.darSiguiente(); //se asigna el segundo nodo como nuevo primer nodo.
-				return elElemento;
-				
-			}
-
-			else
-			{
-				T elElemento = primero.darElemento(); //se obtiene el elemento del primer nodo.
-				primero= null;
-				ultimo= null;
-				return elElemento;
-			}
-			
-			
+		if(primero.darSiguiente()==null){
+			T elemento=primero.darElemento(); 
+			primero=null; 
+			ultimo=null; 
+			return elemento; 
+		}else{
+			T elemento=primero.darElemento(); 
+			primero=primero.darSiguiente(); 
+			return elemento; 
 		}
-		cantidad--;
-		return null;
 	}
 
 	public Iterador<T> iterator() {
