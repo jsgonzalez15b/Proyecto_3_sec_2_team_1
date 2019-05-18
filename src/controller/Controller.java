@@ -71,6 +71,7 @@ public class Controller
 	 * Mapa que permite la ilustracion de vertices y arcos del atributo grafo
 	 */
 	private Mapa mapa; 
+	Stack<Vertice<verticeInfo,Long,Double>> resultadomatriz; 
 
 	//CONSTRUCTOR
 	public Controller()
@@ -79,6 +80,7 @@ public class Controller
 		grafo=new Grafo<>(); 
 		movingViolationsStack = new Stack<>(); 
 		tablainfracciones= new LinearProbingHashST<Integer, VOMovingViolations>(); 
+		resultadomatriz=null; 
 	}
 
 	public void run()
@@ -124,7 +126,18 @@ public class Controller
 				double longMax=Double.parseDouble(datos.split(",")[3]);
 				int filas=Integer.parseInt(datos.split(",")[4]); 
 				int colum=Integer.parseInt(datos.split(",")[5]);
-				requerimiento5(latMin, latMax, longMin, longMax, filas, colum);
+				resultadomatriz=requerimiento5(latMin, latMax, longMin, longMax, filas, colum);
+				break; 
+			case 9: 
+				if(resultadomatriz!=null){
+					double inicio=System.currentTimeMillis(); 
+				LinearProbingHashST< Integer, Stack<Arco<Long,Double>>> caminos=requerimiento8(resultadomatriz);
+				double fintiempo=System.currentTimeMillis()-inicio; 
+				System.out.println("el algoritmo se demora "+fintiempo+" en ejecución");
+				view.printreq8(caminos); 
+				}else{
+					System.out.println("No se ha realizado la aproximación de la matriz");
+				}
 				break; 
 			case 12:	
 				fin=true;
@@ -324,14 +337,14 @@ public class Controller
 		return radio*c; 
 	}
 
-	public Stack<Arco<Long, Double>> requerimiento8(){
+	public Stack<Arco<Long, Double>> requerimiento9(){
 		Vertice<verticeInfo, Long, Double> inicio=darAleatorio();
 		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
-		Stack<Arco<Long, Double>> MST=BFS6(inicio, fin);
+		Stack<Arco<Long, Double>> MST=BFS9(inicio, fin);
 		return  MST; 
 	}
 
-	public Stack<Arco<Long, Double>> BFS6 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
+	public Stack<Arco<Long, Double>> BFS9 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
 		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
 		boolean encontro=false; 
 		LinearProbingHashST<Long, Vertice<verticeInfo, Long, Double>> marcados= new LinearProbingHashST<>(); 
@@ -339,16 +352,15 @@ public class Controller
 		return retornar; 
 	}  
 
-	public Stack<Arco<Long, Double>> requerimiento9(Stack<Vertice<verticeInfo, Long, Double>> vertices){
-		Stack<Arco<Long, Double>> retornar=new Stack<>(); 
+	public LinearProbingHashST<Integer,Stack<Arco<Long, Double>>> requerimiento8(Stack<Vertice<verticeInfo, Long, Double>> vertices){
+		LinearProbingHashST<Integer,Stack<Arco<Long, Double>>> retornar=new LinearProbingHashST<Integer, Stack<Arco<Long,Double>>>(); 
 		Iterator<Vertice<verticeInfo, Long, Double>> iter = vertices.iterator(); 
-		Vertice<verticeInfo, Long, Double> inicio=vertices.darPrimero().darElemento(); 
-		while(iter.hasNext()) {
+		Vertice<verticeInfo, Long, Double> inicio=vertices.darPrimero().darElemento();
+		int i=0; 
+		while(iter.hasNext()&&i<vertices.size()) {
 			Vertice<verticeInfo,Long, Double>fin=iter.next(); 
 			Stack<Arco<Long,Double>> camino=Djikstra(inicio, fin, grafo.darTablaVertices().size()); 
-			while(!camino.isEmpty()) {
-				retornar.push(camino.pop());
-			}
+			retornar.put(i, camino); 
 			inicio=fin; 
 		}	
 		return retornar; 
@@ -396,8 +408,16 @@ public class Controller
 			}
 			i++; 
 		}
-
-
+		Arco<Long,Double> actual=camino.pop();
+		retornar.push(actual);
+		Long inicioanterior=actual.darInicio();
+		while(!camino.isEmpty()){
+			actual=camino.pop(); 
+			if(actual.darAdyacente().equals(inicioanterior)){
+				retornar.push(actual);
+				inicioanterior=actual.darInicio(); 
+			}
+		}
 		return retornar; 
 	}
 

@@ -8,6 +8,7 @@ import model.data_structures.Grafo;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
 import model.data_structures.Iterador;
+import model.data_structures.LinearProbingHashST;
 import model.data_structures.MaxColaPrioridad;
 import model.data_structures.RedBlackBST;
 import model.data_structures.Stack;
@@ -249,6 +250,30 @@ public class MovingViolationsManagerView
 			while(iter.hasNext()) {
 				actual=iter.next(); 
 				System.out.println("Id:"+actual.darLlave()+", Ubicación:"+actual.darValor().darLatitud()+"lat, "+actual.darValor().darlongitud()+"long");
+			}
+			
+		}
+
+		public void printreq8(LinearProbingHashST<Integer, Stack<Arco<Long, Double>>> caminos) {
+			Iterator<Stack<Arco<Long, Double>>> iter = caminos.keys().iterator(); 
+			int camino=0; 
+			double dis;
+			while(iter.hasNext()){
+				Stack<Arco<Long,Double>> actual=iter.next(); 
+				dis=0;
+				System.out.println("CAMINO #"+camino+":");
+				Arco<Long,Double> arcoactual=actual.pop();
+				dis+=arcoactual.darPeso(); 
+				String ruta=arcoactual.darAdyacente()+","+arcoactual.darInicio()+",";
+				while(!actual.isEmpty()){
+					arcoactual=actual.pop(); 
+					dis+=arcoactual.darPeso(); 
+					ruta+=arcoactual.darInicio()+",";					
+				}
+				System.out.println("El peso del camino es : "+ dis+ " km");
+				System.out.println("Camino: "+ ruta);				
+				
+				camino++; 
 			}
 			
 		}
