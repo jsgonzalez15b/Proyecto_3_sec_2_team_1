@@ -94,8 +94,6 @@ public class Controller
 			case 1:
 				cargarDatosJson();
 				System.out.println(grafo.numArcos()+" arcos y " +grafo.numVertices()+" vertices cargados");
-				mapa=new Mapa(grafo); 
-				mapa.pintarGrafo(grafo.darArcosGrafo());
 				break;
 			case 2:
 
@@ -117,10 +115,6 @@ public class Controller
 				break; 
 			case 4: 
 				Stack<Arco<Long, Double>> arcos=requerimiento4();
-				Grafo<verticeInfo,Long, Double> graforeq4= new Grafo<verticeInfo, Long, Double>(); 
-				view.printreq4(arcos,grafo); 
-				mapa=new Mapa(grafo);
-				mapa.pintarGrafo(arcos);				
 				break; 
 			case 5: 
 				System.out.println("Ingrese los 6 datos en el siguiente formato: el intervalo de latitud (latMin,latMax,longMin, longMax,numfilas,numcolumnas)");
@@ -132,8 +126,6 @@ public class Controller
 				int filas=Integer.parseInt(datos.split(",")[4]); 
 				int colum=Integer.parseInt(datos.split(",")[5]);
 				resultadomatriz=requerimiento5(latMin, latMax, longMin, longMax, filas, colum);
-				mapa= new Mapa(grafo);
-				mapa.pintarGrafoporVertices(resultadomatriz);
 				break; 
 			case 9: 
 				if(resultadomatriz!=null){
@@ -203,7 +195,8 @@ public class Controller
 					grafo.addEdge(actual.darLlave(), pId, new Arco<Long, Double>(dis, actual.darLlave(),pId));
 				}
 			}
-			
+			mapa=new Mapa(grafo,1,null); 
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -265,6 +258,9 @@ public class Controller
 			}
 
 		}
+		view.printreq4(pilafinal,grafo); 
+		grafo.setPilaArcos(pilafinal);
+		mapa=new Mapa(grafo,1,null);
 		return pilafinal; 
 	}
 	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin){
@@ -326,7 +322,8 @@ public class Controller
 			}
 			retornar.push(mascercano);
 		}
-		view.printreq5(retornar);  
+		view.printreq5(retornar); 
+		mapa= new Mapa(grafo, 2, retornar); 
 		return retornar; 
 
 	}

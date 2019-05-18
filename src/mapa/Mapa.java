@@ -6,7 +6,6 @@ import com.teamdev.jxmaps.swing.MapView;
 import javafx.scene.layout.Border;
 import model.data_structures.Arco;
 import model.data_structures.Grafo;
-import model.data_structures.IStack;
 import model.data_structures.Stack;
 import model.data_structures.Vertice;
 import model.vo.verticeInfo;
@@ -29,7 +28,7 @@ public class Mapa  extends MapView
 	private MovingViolationsManagerView view; 
 
 	//CONSTRUCTOR
-	public Mapa (Grafo<verticeInfo, Long, Double> mostrar)
+	public Mapa (Grafo<verticeInfo, Long, Double> mostrar, int num ,Stack<Vertice<verticeInfo, Long, Double>> vertices)
 	{
 		grafo=mostrar; 
 		view=new MovingViolationsManagerView();
@@ -48,6 +47,14 @@ public class Mapa  extends MapView
 					mapa.setOptions(opciones);
 					mapa.setZoom(10.0);
 					mapa.setCenter(new LatLng(38.8991, -77.0259));
+					if(num==1) 
+					{
+						pintarGrafo(mostrar);
+					}
+					else 
+					{
+						pintarGrafoporVertices(vertices); 
+					}
 				}
 
 			}
@@ -63,8 +70,9 @@ public class Mapa  extends MapView
 	 * Pintar arcos y vertices del grafo 
 	 * @param mostrar Grafo de vertices y arcos a pintar
 	 */
-	public void pintarGrafo(IStack<Arco<Long, Double>> arcos)
+	public void pintarGrafo(Grafo<verticeInfo,Long, Double> mostrar)
 	{
+		Stack<Arco<Long, Double>> arcos=(Stack<Arco<Long,Double>>) mostrar.darArcosGrafo(); //copia de pila de arcos
 		int i=0; 
 		while (i<arcos.size()) //recorrido de arcos
 		{
@@ -102,7 +110,7 @@ public class Mapa  extends MapView
 	 * Pintar unicamente los vertices del grafo 
 	 * @param vertices Pila de vertices a pintar
 	 */
-	public void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices)
+	private void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices)
 	{ 
 		while(!vertices.isEmpty()) 
 		{
