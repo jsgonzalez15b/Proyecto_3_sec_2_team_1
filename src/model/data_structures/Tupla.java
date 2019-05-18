@@ -1,37 +1,26 @@
 package model.data_structures;
 
-public class Tupla implements Comparable<Tupla>{
+public class Tupla <K,V extends Comparable<V>>{
 
-	private double xCoord, yCoord; 
-	
-	public Tupla (double pxCoord, double pyCoord) {
-		xCoord=pxCoord; 
-		yCoord=pyCoord; 
-	}
-	public double darXCoord() {
-		return xCoord; 
-	}
-	public double darYCoord() {
-		return yCoord; 
-	}
-	
-	public void setCoord(double x,double y) {
-		xCoord=x; 
-		yCoord=y; 
-	}
-	
-	public int compareTo(Tupla o) {
-		int result;  
-		if(this.xCoord<o.darXCoord()) {
-			result=-1; 
-		}else if(this.xCoord>o.darXCoord()) {
-			result=1; 
-		}else {
-			result=this.yCoord>o.darYCoord()?1:(this.yCoord<o.darYCoord()?-1:0); 
+		private K k; 
+		private V v; 
+		
+		public Tupla(K pk, V pv) {
+			k=pk; 
+			v=pv; 
 		}
-		return result; 
-	}
-
+		public K darllave() {
+			return k; 
+		}
+		public V darValor() {
+			return v; 
+		}
+		public void setLlave(K a) {
+			k=a; 
+		}
+		public void setValor(V b) {
+			v=b; 
+		}
 
 
 }
