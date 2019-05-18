@@ -20,16 +20,22 @@ import model.vo.verticeInfo;
 
 public class MovingViolationsManagerView 
 {
-	public MovingViolationsManagerView() {
+	public MovingViolationsManagerView()
+	{
 		
 	}
 	
-	public void printMenu() {
+	public void printMenu()
+	{
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
-		System.out.println("---------------------Taller 8----------------------");
-		System.out.println("1. Cargar desde JSON");
-		System.out.println("4. Retornar camino más corto");
+		System.out.println("---------------------Proyecto 3--------------------");
+		System.out.println("1. Cargar desde JSON las infracciones y mapa correspondiente");
+		System.out.println("2. Encontrar el camino con menos infracciones entre dos vertices aleatorios");
+		System.out.println("3. Identificar los n vertices con mayor numero de infracciones y subgrafos asociados");
+		System.out.println("4. Retornar camino mas corto escogido entre dos vertices aleatorios");
 		System.out.println("5. Retonar aproximación matriz");
+		System.out.println("6. Kruskal: Calcular arbol de extension minima al subgrafo mas grande de 3.");
+		System.out.println("7. Prim: Calcular arbol de extension minima al subgrafo mas grande de 3.");
 	}
 	
 //	public void printDailyStatistics(IQueue<VODaylyStatistic> dailyStatistics) {
