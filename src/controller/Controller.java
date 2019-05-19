@@ -50,7 +50,8 @@ import view.MovingViolationsManagerView;
 
 public class Controller
 {
-	public static final double radio=6.371;  
+	public static final double radio=6.371;
+	public static final Integer INFINITY=10000000;
 	/**
 	 * View para interaccion con usuario
 	 */
@@ -232,12 +233,48 @@ public class Controller
 		return retornar; 
 	}
 	/**
+	 * Requerimiento 2:
 	 * Metodo que retorna una pila de arcos correspondiente al trayecto de menor costo entre los vertices recibidos por parametro
 	 * @return theWay pila de arcos tipo  
 	 */
 	public Stack<Arco<Long, Double>> caminoMenorCosto(Vertice<verticeInfo, Long, Double> vertice1, Vertice<verticeInfo, Long, Double> vertice2)
 	{ 
-		//Stack<Arco<Long, Double>> MST=BFS(inicio, fin); 
+		//idea: utilizar la implementacion con distTo() para el algoritmo de Djistra con una tabla de Hash Linear
+		//con esta lista se relajan los caminos entre vertices hasta llegar al vertice deseado
+		
+		Stack<Arco<Long, Double>> MST=BFS(vertice1, vertice2); //arcos disponibles para estimar el mejor camino
+		Iterator<Arco<Long, Double>> iteradorArcos = MST.iterator(); //Iterador
+		Stack<Arco<Long, Double>> pilafinal= new Stack<>(); //pila a retornar
+		
+		LinearProbingHashST<Long,Integer> distTo= new LinearProbingHashST<>(); //distancia a vertices
+		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>(); //Tabla de marcados
+		
+		marcados.put(vertice1.darLlave(), vertice1);
+		Arco<Long,Double> arcoActual=null;
+		while(iteradorArcos.hasNext())//llenado de distTo
+		{
+			arcoActual=iteradorArcos.next();
+			if(distTo.get(arcoActual.darInicio())==null)
+			{
+				distTo.put(arcoActual.darInicio(), INFINITY);
+			}
+			if(distTo.get(arcoActual.darAdyacente())==null)
+			{
+				distTo.put(arcoActual.darAdyacente(), INFINITY);
+			}
+		}
+		boolean todo=false;
+		while(todo)
+		{
+			//1 iteracion
+			Iterador<Long> adjActuales=(Iterador<Long>) vertice1.darAdyacentes().iterator();
+			while(adjActuales.hasNext())
+			{
+				adjActuales.next();
+			}
+			
+		}
+		
 		return null;
 	}
 
@@ -263,24 +300,36 @@ public class Controller
 		mapa=new Mapa(grafo,1,null);
 		return pilafinal; 
 	}
-	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin){
-		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
+	
+	/**
+	 * Metodo que retorna la pila de arcos asociada al BFS entre dos vertices recibidos por parametro
+	 * @return retornar pila de arcos tipo Long, Double 
+	 */
+	public Stack<Arco<Long, Double>> BFS(Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo,Long, Double> fin)
+	{
+		Stack<Arco<Long, Double>> retornar= new Stack<>(); //pila a retornar
 		boolean encontro=false; 
-		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>();
+		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>(); //tabla de marcacion
+		
 		Queue<Long> cola= new Queue<>(); 
 		marcados.put(inicio.darLlave(), inicio);
 		cola.enqueue(inicio.darLlave());
-		while(!cola.isEmpty()&&!encontro){
+		
+		while(!cola.isEmpty()&&!encontro)
+		{
 			Long actual=cola.dequeue();  
 			Iterator<Long> iter = grafo.getVertice(actual).darAdyacentes().iterator();
 			Long longactual;
-			while(iter.hasNext()&&!encontro){
+			while(iter.hasNext()&&!encontro) //iteracion sobre adyacentes actuales
+			{
 				longactual=iter.next();
-				if(marcados.get(longactual)==null){
+				if(marcados.get(longactual)==null)
+				{
 					marcados.put(longactual, grafo.getVertice(longactual));
 					cola.enqueue(longactual);
 					retornar.push(grafo.getArc(actual,longactual));
-					if(longactual.equals(fin.darLlave())) {
+					if(longactual.equals(fin.darLlave())) 
+					{
 						encontro=true; 
 					}
 				} 
