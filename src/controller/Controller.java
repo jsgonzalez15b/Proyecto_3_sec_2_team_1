@@ -239,17 +239,20 @@ public class Controller
 	 */
 	public Stack<Arco<Long, Double>> caminoMenorCosto(Vertice<verticeInfo, Long, Double> vertice1, Vertice<verticeInfo, Long, Double> vertice2)
 	{ 
-		//idea: utilizar la implementacion con distTo() para el algoritmo de Djistra con una tabla de Hash Linear
+		//idea: utilizar la implementacion con distTo() y edgeTo() para el algoritmo de Djistra con una tabla de Hash Linear
 		//con esta lista se relajan los caminos entre vertices hasta llegar al vertice deseado
 		
 		Stack<Arco<Long, Double>> MST=BFS(vertice1, vertice2); //arcos disponibles para estimar el mejor camino
 		Iterator<Arco<Long, Double>> iteradorArcos = MST.iterator(); //Iterador
 		Stack<Arco<Long, Double>> pilafinal= new Stack<>(); //pila a retornar
 		
-		LinearProbingHashST<Long,Integer> distTo= new LinearProbingHashST<>(); //distancia a vertices
+		LinearProbingHashST<Long,Integer> distTo= new LinearProbingHashST<>(); //distancia a vertices desde vertice 1
+		LinearProbingHashST<Long,Long> edgeTo= new LinearProbingHashST<>(); //ultimo vertice desde el cual se llego
 		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>(); //Tabla de marcados
 		
 		marcados.put(vertice1.darLlave(), vertice1);
+		distTo.put(vertice1.darLlave(), 0);//se inicializa la distancia en cero
+		edgeTo.put(vertice1.darLlave(), vertice1.darLlave());//se inicializa la distancia en cero
 		Arco<Long,Double> arcoActual=null;
 		while(iteradorArcos.hasNext())//llenado de distTo
 		{
@@ -263,15 +266,25 @@ public class Controller
 				distTo.put(arcoActual.darAdyacente(), INFINITY);
 			}
 		}
-		boolean todo=false;
-		while(todo)
+		//Hasta aqui la primera iteracion
+		boolean todo=false;//provisional
+		Iterador<Long> adjActuales=(Iterador<Long>) vertice1.darAdyacentes().iterator();//1 iteracion
+		Vertice<verticeInfo,Long,Double> verticeIteracion=null;
+		Vertice<verticeInfo,Long,Double> verticeMinIteracion=null;
+		Integer minIteracion=INFINITY;
+		
+		while(todo && iteradorArcos.hasNext())
 		{
-			//1 iteracion
-			Iterador<Long> adjActuales=(Iterador<Long>) vertice1.darAdyacentes().iterator();
 			while(adjActuales.hasNext())
 			{
-				adjActuales.next();
+				verticeIteracion=grafo.getVertice(adjActuales.next());
+				if(verticeIteracion.darNInfracciones()<minIteracion)
+				{
+					minIteracion=verticeIteracion.darNInfracciones();
+					verticeMinIteracion = verticeIteracion;
+				}
 			}
+			distTo.put(verticeMinIteracion.darLlave(), minIteracion);
 			
 		}
 		
