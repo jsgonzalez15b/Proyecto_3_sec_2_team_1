@@ -249,43 +249,62 @@ public class Controller
 		LinearProbingHashST<Long,Integer> distTo= new LinearProbingHashST<>(); //distancia a vertices desde vertice 1
 		LinearProbingHashST<Long,Long> edgeTo= new LinearProbingHashST<>(); //ultimo vertice desde el cual se llego
 		LinearProbingHashST<Long,Vertice<verticeInfo,Long, Double>> marcados= new LinearProbingHashST<>(); //Tabla de marcados
+		Queue<Long> verticesRestantes=new Queue<>();//vertices a recorrer optimizando distancias restantes
 		
 		marcados.put(vertice1.darLlave(), vertice1);
 		distTo.put(vertice1.darLlave(), 0);//se inicializa la distancia en cero
-		edgeTo.put(vertice1.darLlave(), vertice1.darLlave());//se inicializa la distancia en cero
+		edgeTo.put(vertice1.darLlave(), vertice1.darLlave());
+		
+		Long cero =(long) 0; //necesario para inicializar el edgeTo
 		Arco<Long,Double> arcoActual=null;
-		while(iteradorArcos.hasNext())//llenado de distTo
+		while(iteradorArcos.hasNext())//llenado de distTo y edgeTo de todos los nodos en MST
 		{
 			arcoActual=iteradorArcos.next();
 			if(distTo.get(arcoActual.darInicio())==null)
 			{
 				distTo.put(arcoActual.darInicio(), INFINITY);
+				edgeTo.put(arcoActual.darInicio(), cero);
 			}
 			if(distTo.get(arcoActual.darAdyacente())==null)
 			{
 				distTo.put(arcoActual.darAdyacente(), INFINITY);
+				edgeTo.put(arcoActual.darAdyacente(), cero);
 			}
 		}
-		//Hasta aqui la primera iteracion
-		boolean todo=false;//provisional
+		//Hasta aqui la primera iteracion, ahora a actualizar iterativamente
+		
 		Iterador<Long> adjActuales=(Iterador<Long>) vertice1.darAdyacentes().iterator();//1 iteracion
 		Vertice<verticeInfo,Long,Double> verticeIteracion=null;
 		Vertice<verticeInfo,Long,Double> verticeMinIteracion=null;
 		Integer minIteracion=INFINITY;
 		
-		while(todo && iteradorArcos.hasNext())
+		while(iteradorArcos.hasNext())
 		{
 			while(adjActuales.hasNext())
 			{
 				verticeIteracion=grafo.getVertice(adjActuales.next());
-				if(verticeIteracion.darNInfracciones()<minIteracion)
+				if(verticeIteracion.darAdyacentes().size()==0) //marcacion de vertice si este no tiene adyacentes
+				{
+					marcados.put(verticeIteracion.darLlave(), verticeIteracion);
+				}
+				else //guardado de vertice por terminar si este tiene adyacentes
+				{
+					verticesRestantes.enqueue(verticeIteracion.darLlave());
+				}
+				
+				if(verticeIteracion.darNInfracciones()<minIteracion)//obtencion de minimo
 				{
 					minIteracion=verticeIteracion.darNInfracciones();
 					verticeMinIteracion = verticeIteracion;
 				}
+				if(distTo.get(verticeIteracion.darLlave()) > verticeIteracion.darNInfracciones())
+				{
+					distTo.put(verticeIteracion.darLlave(), verticeIteracion.darNInfracciones());
+				}
 			}
 			distTo.put(verticeMinIteracion.darLlave(), minIteracion);
-			
+			minIteracion=INFINITY;
+			verticeMinIteracion=null;			
 		}
 		
 		return null;
