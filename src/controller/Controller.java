@@ -135,6 +135,16 @@ public class Controller
 				double fintiempo=System.currentTimeMillis()-inicio; 
 				System.out.println("el algoritmo se demora "+fintiempo+" en ejecución");
 				view.printreq8(caminos); 
+				Stack<Arco<Long, Double>> TodosCaminos=new Stack<>(); 
+				Iterator<Arco<Long, Double>> iter=TodosCaminos.iterator(); 
+				while(iter.hasNext()) {
+					Arco<Long, Double> actual=iter.next(); 
+					TodosCaminos.push(actual); 
+				}
+				Grafo<verticeInfo, Long, Double> graforeq8 = new Grafo<>(); 
+				graforeq8.setPilaArcos(TodosCaminos);
+				graforeq8.setListaVertices(grafo.darTablaVertices());
+				mapa=new Mapa(graforeq8, 1, null); 
 				}else{
 					System.out.println("No se ha realizado la aproximación de la matriz");
 				}
@@ -145,6 +155,13 @@ public class Controller
 				double f=System.currentTimeMillis()-inicio; 
 				System.out.println("se tardó "+f+" milisegundos en ejecutar");
 				view.printreq9(resultado,grafo); 
+				Stack<Vertice<verticeInfo,Long, Double>> graficar= new Stack<>();
+				Iterator< Long> iter= resultado.iterator(); 
+				while(iter.hasNext()) {
+					Vertice<verticeInfo, Long, Double> actual=grafo.getVertice(iter.next());
+					graficar.push(actual);
+				}
+				mapa= new Mapa(grafo,9,graficar); 
 				
 			case 12:	
 				fin=true;
@@ -476,6 +493,7 @@ public class Controller
 			Stack<Arco<Long,Double>> camino=Djikstra(inicio, fin, grafo.darTablaVertices().size()); 
 			retornar.put(i, camino); 
 			inicio=fin; 
+			i++; 
 		}	
 		return retornar; 
 

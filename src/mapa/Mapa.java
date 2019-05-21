@@ -51,10 +51,14 @@ public class Mapa  extends MapView
 					{
 						pintarGrafo(mostrar);
 					}
+					else if(num==9) {
+						pintarGrafoporVertices2(vertices);
+					}
 					else 
 					{
 						pintarGrafoporVertices(vertices); 
 					}
+					
 				}
 
 			}
@@ -111,6 +115,23 @@ public class Mapa  extends MapView
 	 * @param vertices Pila de vertices a pintar
 	 */
 	private void pintarGrafoporVertices(Stack<Vertice<verticeInfo, Long, Double>> vertices)
+	{ 
+		while(!vertices.isEmpty()) 
+		{
+			Vertice<verticeInfo, Long, Double> vertice=vertices.pop(); 
+			verticeInfo info=vertice.darValor(); 
+			LatLng[] datos=new LatLng[1]; 
+			datos[0]=new LatLng(info.darLatitud(), info.darlongitud()); 
+			Circle circulo=new Circle(mapa); 
+			circulo.setCenter(datos[0]);
+			circulo.setRadius(0.4);
+			CircleOptions opciones= new CircleOptions(); 
+			opciones.setFillColor("#FF0000");
+			circulo.setOptions(opciones);
+			circulo.setVisible(true);
+		}
+	}
+	private void pintarGrafoporVertices2(Stack<Vertice<verticeInfo, Long, Double>> vertices)
 	{ 
 		while(!vertices.isEmpty()) 
 		{
