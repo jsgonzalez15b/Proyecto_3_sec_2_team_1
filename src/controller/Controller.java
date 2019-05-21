@@ -432,6 +432,14 @@ public class Controller
 		lista.enqueue(inicio.darLlave());
 		marcados.put(inicio.darLlave(), true);
 		size++; 
+		if(inicio.darLlave().equals(fin.darLlave())) {
+			Stack<Long>camino=new Stack<>(); 
+			Iterador<Long> iter = lista.iterator(); 
+			while(iter.hasNext()) {
+				Long actual=iter.next(); 
+				camino.push(actual);
+			}
+		}
 		
 	}  
 
