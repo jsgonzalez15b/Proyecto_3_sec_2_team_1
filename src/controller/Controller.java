@@ -128,7 +128,7 @@ public class Controller
 				int colum=Integer.parseInt(datos.split(",")[5]);
 				resultadomatriz=requerimiento5(latMin, latMax, longMin, longMax, filas, colum);
 				break; 
-			case 9: 
+			case 8: 
 				if(resultadomatriz!=null){
 					double inicio=System.currentTimeMillis(); 
 				LinearProbingHashST< Integer, Stack<Arco<Long,Double>>> caminos=requerimiento8(resultadomatriz);
@@ -139,6 +139,13 @@ public class Controller
 					System.out.println("No se ha realizado la aproximación de la matriz");
 				}
 				break; 
+			case 9:
+				double inicio=System.currentTimeMillis(); 
+				Stack<Long> resultado=requerimiento9(); 
+				double f=System.currentTimeMillis()-inicio; 
+				System.out.println("se tardó "+f+" milisegundos en ejecutar");
+				view.printreq9(resultado,grafo); 
+				
 			case 12:	
 				fin=true;
 				sc.close();
@@ -418,31 +425,47 @@ public class Controller
 		return radio*c; 
 	}
 
-	public int size;  
-	public Stack<Arco<Long, Double>> requerimiento9(){
+	public Stack<Long> requerimiento9(){
 		Vertice<verticeInfo, Long, Double> inicio=darAleatorio();
 		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
-		Stack<Arco<Long, Double>> MST=DFS9(inicio, fin);
-		return  MST; 
-	}
-
-	public Stack<Arco<Long, Double>> DFS9 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
-		Queue<Long> lista= new Queue<>();
-		LinearProbingHashST<Long, Boolean> marcados= new LinearProbingHashST<>(); 
-		lista.enqueue(inicio.darLlave());
-		marcados.put(inicio.darLlave(), true);
-		size++; 
-		if(inicio.darLlave().equals(fin.darLlave())) {
-			Stack<Long>camino=new Stack<>(); 
-			Iterador<Long> iter = lista.iterator(); 
-			while(iter.hasNext()) {
-				Long actual=iter.next(); 
-				camino.push(actual);
+		LinearProbingHashST<Integer, Stack<Long>> caminos=new Caminos(grafo, inicio, fin).darCaminosTodos(); 
+		Iterator<Stack<Long>> itercaminos = caminos.keys().iterator(); 
+		int verticesnumero=1000;
+		int infracciones=0; 
+		Stack<Long> retornar=new Stack<>(); 
+		while(itercaminos.hasNext()) {
+			Stack<Long> caminoactual=itercaminos.next(); 
+			if(caminoactual.size()<verticesnumero) {
+				verticesnumero=caminoactual.size(); 
+				retornar=caminoactual; 
+				infracciones=calcularnumerodeinfracciones(caminoactual); 
+			}else if(caminoactual.size()==verticesnumero) {
+				int infraccionesactual=calcularnumerodeinfracciones(caminoactual); 
+				if(infraccionesactual<infracciones) {
+					retornar=caminoactual; 
+					infracciones=infraccionesactual; 
+				}
 			}
 		}
+		System.out.println("El camino calculado tiene " + infracciones+ " infracciones");
+		return retornar; 
 		
-	}  
-
+	} 
+	public int calcularnumerodeinfracciones (Stack<Long> vertices) {
+		if(vertices.isEmpty()) {
+			return 0; 
+		}else {
+			int infracciones=0; 
+			Iterator<Long> iter = vertices.iterator(); 
+			while(iter.hasNext()) {
+			Vertice<verticeInfo,Long, Double>actual=grafo.getVertice(iter.next()); 
+			if(actual!=null) {
+				infracciones+=actual.darNInfracciones(); 
+			}
+		}
+			return infracciones; 
+		}
+	}
 	public LinearProbingHashST<Integer,Stack<Arco<Long, Double>>> requerimiento8(Stack<Vertice<verticeInfo, Long, Double>> vertices){
 		LinearProbingHashST<Integer,Stack<Arco<Long, Double>>> retornar=new LinearProbingHashST<Integer, Stack<Arco<Long,Double>>>(); 
 		Iterator<Vertice<verticeInfo, Long, Double>> iter = vertices.iterator(); 

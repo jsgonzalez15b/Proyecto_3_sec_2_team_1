@@ -277,5 +277,21 @@ public class MovingViolationsManagerView
 			}
 			
 		}
+
+		public void printreq9(Stack<Long> resultado, Grafo<verticeInfo, Long, Double> grafo) {
+			Iterator<Long> iter=resultado.iterator(); 
+			String cadena=""; 
+			Long anterior=resultado.darPrimero().darElemento(); 
+			double dis=0; 
+			while(iter.hasNext()) {
+				Long actual=iter.next(); 
+				cadena+=actual+"";
+				dis+=grafo.getInfoArc(anterior, actual); 
+				anterior=actual; 
+			}
+			System.out.println(cadena);
+			System.out.println("Distancia total del camino:" + dis +" km");
+			
+		}
 	
 }
