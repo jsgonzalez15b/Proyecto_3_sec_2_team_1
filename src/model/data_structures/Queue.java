@@ -89,7 +89,20 @@ public class Queue<T> implements IQueue<T>
 	public Iterador<T> iterator() {
 		return new Iterador<T>(primero);
 	}
-	
+	public void dequequeporId(int a) {
+		Nodo<T> anterior = primero; 
+		if(a==0) {
+		primero=primero.darSiguiente(); 
+		}else {
+			for(int i=0; i<=a; i++) {
+					Nodo<T> actual = primero.darSiguiente(); 
+					if(a==i) {
+						anterior.setSiguiente(actual.darSiguiente());
+					}
+					anterior=actual; 
+			}
+		}
+	}
 
 
 

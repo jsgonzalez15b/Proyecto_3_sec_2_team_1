@@ -418,6 +418,7 @@ public class Controller
 		return radio*c; 
 	}
 
+	public int size;  
 	public Stack<Arco<Long, Double>> requerimiento9(){
 		Vertice<verticeInfo, Long, Double> inicio=darAleatorio();
 		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
@@ -430,6 +431,7 @@ public class Controller
 		LinearProbingHashST<Long, Boolean> marcados= new LinearProbingHashST<>(); 
 		lista.enqueue(inicio.darLlave());
 		marcados.put(inicio.darLlave(), true);
+		size++; 
 		
 	}  
 
