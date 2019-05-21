@@ -421,16 +421,16 @@ public class Controller
 	public Stack<Arco<Long, Double>> requerimiento9(){
 		Vertice<verticeInfo, Long, Double> inicio=darAleatorio();
 		Vertice<verticeInfo, Long, Double> fin=darAleatorio(); 
-		Stack<Arco<Long, Double>> MST=BFS9(inicio, fin);
+		Stack<Arco<Long, Double>> MST=DFS9(inicio, fin);
 		return  MST; 
 	}
 
-	public Stack<Arco<Long, Double>> BFS9 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
-		Stack<Arco<Long, Double>> retornar= new Stack<>(); 
-		boolean encontro=false; 
-		LinearProbingHashST<Long, Vertice<verticeInfo, Long, Double>> marcados= new LinearProbingHashST<>(); 
-		Queue<Long> cola= new Queue<>(); 
-		return retornar; 
+	public Stack<Arco<Long, Double>> DFS9 (Vertice<verticeInfo, Long, Double> inicio, Vertice<verticeInfo, Long, Double> fin){
+		Queue<Long> lista= new Queue<>();
+		LinearProbingHashST<Long, Boolean> marcados= new LinearProbingHashST<>(); 
+		lista.enqueue(inicio.darLlave());
+		marcados.put(inicio.darLlave(), true);
+		
 	}  
 
 	public LinearProbingHashST<Integer,Stack<Arco<Long, Double>>> requerimiento8(Stack<Vertice<verticeInfo, Long, Double>> vertices){
