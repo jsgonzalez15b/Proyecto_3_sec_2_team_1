@@ -37,6 +37,8 @@ public class MovingViolationsManagerView
 		System.out.println("5. Retonar aproximación matriz");
 		System.out.println("6. Kruskal: Calcular arbol de extension minima al subgrafo mas grande de 3.");
 		System.out.println("7. Prim: Calcular arbol de extension minima al subgrafo mas grande de 3.");
+		System.out.println("8. Requerimiento 8");
+		System.out.println("9. Requerimiento 9");
 	}
 	
 //	public void printDailyStatistics(IQueue<VODaylyStatistic> dailyStatistics) {
