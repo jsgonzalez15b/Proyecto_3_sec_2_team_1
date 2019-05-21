@@ -108,7 +108,6 @@ public class Grafo <V extends Comparable<V>,K extends Comparable<K>,A extends Co
 		Vertice<V,K,A> fin=TablaVertices.get(idVertexFin); 
 		if (inicio!=null&&fin!=null){
 			inicio.agregarArco(arco);
-			fin.agregarArco(arco);
 			pilaArcos.push(arco);
 		}else{
 			throw new Exception("Alguno de los vertices es nulo"); 
